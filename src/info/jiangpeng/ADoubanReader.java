@@ -55,7 +55,9 @@ public class aDoubanReader extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Book book = bookArrayAdapter.getItem(position);
-        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(book.getBookUrlInWeb()));
+        Intent myIntent = new Intent(this, BookDetailsWeb.class);
+        myIntent.putExtra(BookDetailsWeb.BOOK_DETAILS_WEB_URL, book.getBookUrlInWeb());
+
         startActivity(myIntent);
     }
 

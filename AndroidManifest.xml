@@ -32,5 +32,10 @@
                     android:resource="@xml/searchable"
                     />
         </activity>
+
+        <activity android:name=".BookDetailsWeb"
+                  android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
     </application>
 </manifest>
