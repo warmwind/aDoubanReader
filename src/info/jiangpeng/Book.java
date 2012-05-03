@@ -1,11 +1,13 @@
 package info.jiangpeng;
 
+import android.graphics.drawable.BitmapDrawable;
+
 public class Book {
     private String title;
-    private String imageUrl;
     private String author;
     private String averageRate;
     private String bookUrlInWeb;
+    private BitmapDrawable imageDrawable;
 
     public void setTitle(String title) {
         this.title = title;
@@ -13,21 +15,6 @@ public class Book {
 
     public String getTitle() {
         return title;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "title='" + title + '\'' +
-                '}';
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public void setAuthor(String author) {
@@ -52,5 +39,13 @@ public class Book {
 
     public String getBookUrlInWeb() {
         return bookUrlInWeb;
+    }
+
+    public void setImageDrawable(BitmapDrawable imageDrawable) {
+        this.imageDrawable = imageDrawable;
+    }
+
+    public BitmapDrawable getImageDrawable() {
+        return imageDrawable;
     }
 }

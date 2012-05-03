@@ -4,28 +4,28 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.*;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
 public class aDoubanReader extends ListActivity {
 
     private SearchResultAdapter bookArrayAdapter;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +41,10 @@ public class aDoubanReader extends ListActivity {
 
         Intent intent = getIntent();
         String rawString = intent.getStringExtra(SearchActivity.RAW_SEARCH_RESULT);
-        System.out.println("------------rawString = " + rawString);
         if (rawString != null) {
             parseBookList(rawString);
-
             bookArrayAdapter.notifyDataSetChanged();
         }
-
 
     }
 
@@ -71,9 +68,13 @@ public class aDoubanReader extends ListActivity {
             for (int i = 0; i < resultNumber; i++) {
                 JSONObject jsonBook = entryArray.getJSONObject(i);
                 Book book = new Book();
+
                 book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
                 book.setBookUrlInWeb(jsonBook.getJSONArray("link").getJSONObject(1).getString("@href"));
-                book.setImageUrl(jsonBook.getJSONArray("link").getJSONObject(2).getString("@href"));
+
+                String imageUrl = jsonBook.getJSONArray("link").getJSONObject(2).getString("@href");
+                book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
+
                 book.setAuthor(jsonBook.getJSONArray("author").getJSONObject(0).getJSONObject("name").getString("$t"));
                 book.setAverageRate(jsonBook.getJSONObject("gd:rating").getString("@average"));
 
@@ -81,6 +82,10 @@ public class aDoubanReader extends ListActivity {
 
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

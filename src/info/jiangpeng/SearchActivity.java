@@ -23,7 +23,6 @@ public class SearchActivity extends Activity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            System.out.println("------------query = " + query);
 
             Intent showInMain = new Intent(this, aDoubanReader.class);
             try {

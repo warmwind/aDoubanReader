@@ -39,24 +39,14 @@ public class SearchResultAdapter extends ArrayAdapter<Book> {
 
         fillContentToView(getItem(position), bookLayout);
 
-
         return bookLayout;
     }
 
     private void fillContentToView(Book item, LinearLayout bookLayout) {
-        fillImage(item, bookLayout);
+        ((ImageView) bookLayout.findViewById(R.id.book_image)).setImageDrawable(item.getImageDrawable());
         ((TextView) bookLayout.findViewById(R.id.book_title)).setText(item.getTitle());
         ((TextView) bookLayout.findViewById(R.id.book_author)).setText(item.getAuthor());
         ((TextView) bookLayout.findViewById(R.id.book_rate)).setText(item.getAverageRate());
-    }
-
-    private void fillImage(Book item, LinearLayout bookLayout) {
-        ImageView bookImage = (ImageView) bookLayout.findViewById(R.id.book_image);
-        try {
-            bookImage.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(item.getImageUrl()).openStream())));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
