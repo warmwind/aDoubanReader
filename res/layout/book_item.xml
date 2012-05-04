@@ -22,5 +22,15 @@
               android:layout_height="wrap_content"
               android:layout_toRightOf="@id/book_image"
               android:layout_below="@id/book_author"/>
+    <TextView android:id="@+id/book_publisher"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_toRightOf="@id/book_image"
+              android:layout_below="@id/book_rate"/>
+    <TextView android:id="@+id/book_pubdate"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_toRightOf="@id/book_image"
+              android:layout_below="@id/book_publisher"/>
 
 </RelativeLayout>

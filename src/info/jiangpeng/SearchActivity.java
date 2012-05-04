@@ -42,14 +42,15 @@ public class SearchActivity extends Activity {
         Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
                 appendQueryParameter("alt", "json").
                 appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
-                appendQueryParameter("tag", query).build();
+                appendQueryParameter("max-results", "20").
+                appendQueryParameter("q", query).build();
 
         HttpGet request = new HttpGet(uri.toString());
 
         return EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
     }
 
-    private class Search extends AsyncTask<String, Integer, String>{
+    private class Search extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... strings) {

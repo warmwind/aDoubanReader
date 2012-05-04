@@ -8,6 +8,8 @@ public class Book {
     private String averageRate;
     private String bookUrlInWeb;
     private BitmapDrawable imageDrawable;
+    private String publisher;
+    private String pubDate;
 
     public void setTitle(String title) {
         this.title = title;
@@ -51,5 +53,21 @@ public class Book {
 
     public boolean  isEmpty(){
         return title == null || title.isEmpty();
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setPubDate(String pubDate) {
+        this.pubDate = pubDate;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public String getPubDate() {
+        return pubDate;
     }
 }

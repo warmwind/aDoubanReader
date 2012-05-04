@@ -81,14 +81,41 @@ public class aDoubanReader extends ListActivity {
         Book book = new Book();
 
         book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
-        book.setBookUrlInWeb(jsonBook.getJSONArray("link").getJSONObject(1).getString("@href"));
-
-        String imageUrl = jsonBook.getJSONArray("link").getJSONObject(2).getString("@href");
-        book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
+        parseLinkJson(jsonBook, book);
 
         book.setAuthor(jsonBook.getJSONArray("author").getJSONObject(0).getJSONObject("name").getString("$t"));
         book.setAverageRate(jsonBook.getJSONObject("gd:rating").getString("@average"));
+
+        parseMetadataJson(jsonBook, book);
+
         return book;
+    }
+
+    private void parseMetadataJson(JSONObject jsonBook, Book book) throws JSONException {
+        JSONArray metadataArray = jsonBook.getJSONArray("db:attribute");
+        for(int i =0;i< metadataArray.length();i++){
+            JSONObject metaJson = metadataArray.getJSONObject(i);
+            if(metaJson.getString("@name").equals("publisher")){
+                book.setPublisher(metaJson.getString("$t"));
+            }
+            else if(metaJson.getString("@name").equals("pubdate")){
+                book.setPubDate(metaJson.getString("$t"));
+            }
+        }
+    }
+
+    private void parseLinkJson(JSONObject jsonBook, Book book) throws JSONException, IOException {
+        JSONArray linkArray = jsonBook.getJSONArray("link");
+        for (int i = 0; i < linkArray.length(); i++) {
+            JSONObject linkJson = linkArray.getJSONObject(i);
+            if(linkJson.getString("@rel").equals("alternate")){
+                book.setBookUrlInWeb(linkJson.getString("@href"));
+             }
+            else if(linkJson.getString("@rel").equals("image")){
+                String imageUrl = linkJson.getString("@href");
+                book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
+            }
+        }
     }
 
     private class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
