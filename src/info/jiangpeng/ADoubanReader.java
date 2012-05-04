@@ -6,27 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
-import org.apache.http.client.ClientProtocolException;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SearchView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 public class aDoubanReader extends ListActivity {
 
     private SearchResultAdapter bookArrayAdapter;
+    private int currentStatus;
+    private int bookListSize;
+    private ProgressBar progressBar;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,9 +42,12 @@ public class aDoubanReader extends ListActivity {
         bookArrayAdapter = new SearchResultAdapter(this, R.layout.book_item, R.id.book_title);
         mainView.setAdapter(bookArrayAdapter);
 
+        progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
+
         Intent intent = getIntent();
         String rawString = intent.getStringExtra(SearchActivity.RAW_SEARCH_RESULT);
         if (rawString != null) {
+            progressBar.setVisibility(View.VISIBLE);
             parseBookList(rawString);
             bookArrayAdapter.notifyDataSetChanged();
         }
@@ -66,8 +68,8 @@ public class aDoubanReader extends ListActivity {
         try {
             JSONArray entryArray = new JSONObject(rawString).getJSONArray("entry");
 
-            int resultNumber = entryArray.length();
-            for (int i = 0; i < resultNumber; i++) {
+            bookListSize = entryArray.length();
+            for (int i = 0; i < bookListSize; i++) {
                 new BookParserTask().execute(entryArray.getJSONObject(i));
             }
         } catch (JSONException e) {
@@ -105,9 +107,16 @@ public class aDoubanReader extends ListActivity {
 
         @Override
         protected void onPostExecute(Book book) {
+            currentStatus = currentStatus + 1000 / bookListSize;
+            progressBar.setProgress(currentStatus);
             if (!book.isEmpty()) {
                 bookArrayAdapter.add(book);
                 bookArrayAdapter.notifyDataSetChanged();
+            }
+
+            if(currentStatus >= 1000){
+                progressBar.setProgress(1000);
+                progressBar.setVisibility(View.GONE);
             }
         }
     }

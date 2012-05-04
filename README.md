@@ -18,3 +18,5 @@ To Do List:
 6. Checking my own booklist
 
 7. Can change book stauts
+
+8. Add empty search result screen
