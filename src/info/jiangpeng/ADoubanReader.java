@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
@@ -29,7 +31,9 @@ public class aDoubanReader extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.main);
+
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = (SearchView) findViewById(R.id.search);
@@ -60,33 +64,51 @@ public class aDoubanReader extends ListActivity {
 
     private void parseBookList(String rawString) {
         try {
-
-            JSONObject jsonObject = new JSONObject(rawString);
-            JSONArray entryArray = jsonObject.getJSONArray("entry");
+            JSONArray entryArray = new JSONObject(rawString).getJSONArray("entry");
 
             int resultNumber = entryArray.length();
             for (int i = 0; i < resultNumber; i++) {
-                JSONObject jsonBook = entryArray.getJSONObject(i);
-                Book book = new Book();
-
-                book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
-                book.setBookUrlInWeb(jsonBook.getJSONArray("link").getJSONObject(1).getString("@href"));
-
-                String imageUrl = jsonBook.getJSONArray("link").getJSONObject(2).getString("@href");
-                book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
-
-                book.setAuthor(jsonBook.getJSONArray("author").getJSONObject(0).getJSONObject("name").getString("$t"));
-                book.setAverageRate(jsonBook.getJSONObject("gd:rating").getString("@average"));
-
-                bookArrayAdapter.add(book);
-
+                new BookParserTask().execute(entryArray.getJSONObject(i));
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    private Book parseBook(JSONObject jsonBook) throws JSONException, IOException {
+        Book book = new Book();
+
+        book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
+        book.setBookUrlInWeb(jsonBook.getJSONArray("link").getJSONObject(1).getString("@href"));
+
+        String imageUrl = jsonBook.getJSONArray("link").getJSONObject(2).getString("@href");
+        book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
+
+        book.setAuthor(jsonBook.getJSONArray("author").getJSONObject(0).getJSONObject("name").getString("$t"));
+        book.setAverageRate(jsonBook.getJSONObject("gd:rating").getString("@average"));
+        return book;
+    }
+
+    private class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
+
+        @Override
+        protected Book doInBackground(JSONObject... jsonObjects) {
+            try {
+                return parseBook(jsonObjects[0]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new Book();
+        }
+
+        @Override
+        protected void onPostExecute(Book book) {
+            if (!book.isEmpty()) {
+                bookArrayAdapter.add(book);
+                bookArrayAdapter.notifyDataSetChanged();
+            }
         }
     }
 

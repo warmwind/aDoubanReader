@@ -48,4 +48,8 @@ public class Book {
     public BitmapDrawable getImageDrawable() {
         return imageDrawable;
     }
+
+    public boolean  isEmpty(){
+        return title == null || title.isEmpty();
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class SearchActivity extends Activity {
 
     public static final String RAW_SEARCH_RESULT = "RAW_SEARCH_RESULT";
-    public static final int SEARCH = 1;
+    private Intent showInMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +25,9 @@ public class SearchActivity extends Activity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            Intent showInMain = new Intent(this, aDoubanReader.class);
-            try {
-                String value = searchBookList(query);
-                showInMain.putExtra(RAW_SEARCH_RESULT, value);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            showInMain = new Intent(this, aDoubanReader.class);
+            new Search().execute(query);
             startActivity(showInMain);
-            finish();
         }
     }
 
@@ -45,6 +40,25 @@ public class SearchActivity extends Activity {
         HttpGet request = new HttpGet(uri.toString());
 
         return EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
+    }
+
+    private class Search extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                return searchBookList(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            showInMain.putExtra(RAW_SEARCH_RESULT, s);
+            startActivity(showInMain);
+        }
     }
 
 }
