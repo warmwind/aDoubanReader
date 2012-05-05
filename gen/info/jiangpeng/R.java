@@ -12,7 +12,7 @@ public final class R {
     }
     public static final class color {
         public static final int book_item_color=0x7f050001;
-        public static final int title_background=0x7f050000;
+        public static final int search_bar_background=0x7f050000;
     }
     public static final class drawable {
         public static final int app_main_logo=0x7f020000;

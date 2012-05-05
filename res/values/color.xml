@@ -1,4 +1,4 @@
 <resources>
-    <color name="title_background">#E9F4E9</color>
+    <color name="search_bar_background">#E9F4E9</color>
     <color name="book_item_color">#000000</color>
 </resources>
