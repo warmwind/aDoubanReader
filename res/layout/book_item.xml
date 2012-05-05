@@ -11,26 +11,31 @@
     <TextView android:id="@+id/book_title"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_toRightOf="@id/book_image"/>
+              android:layout_toRightOf="@id/book_image"
+              android:textColor="@color/book_item_color"/>
     <TextView android:id="@+id/book_author"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_toRightOf="@id/book_image"
-              android:layout_below="@id/book_title"/>
+              android:layout_below="@id/book_title"
+              android:textColor="@color/book_item_color"/>
     <TextView android:id="@+id/book_rate"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_toRightOf="@id/book_image"
-              android:layout_below="@id/book_author"/>
+              android:layout_below="@id/book_author"
+              android:textColor="@color/book_item_color"/>
     <TextView android:id="@+id/book_publisher"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_toRightOf="@id/book_image"
-              android:layout_below="@id/book_rate"/>
+              android:layout_below="@id/book_rate"
+              android:textColor="@color/book_item_color"/>
     <TextView android:id="@+id/book_pubdate"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_toRightOf="@id/book_image"
-              android:layout_below="@id/book_publisher"/>
+              android:layout_below="@id/book_publisher"
+              android:textColor="@color/book_item_color"/>
 
 </RelativeLayout>

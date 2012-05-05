@@ -20,3 +20,5 @@ To Do List:
 7. Can change book stauts
 
 8. Add empty search result screen
+
+9. Add title bar

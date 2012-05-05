@@ -120,6 +120,8 @@ public class aDoubanReader extends ListActivity {
 
     private class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
 
+        public static final int PROGRESS_BAR_MAX = 1000;
+
         @Override
         protected Book doInBackground(JSONObject... jsonObjects) {
             try {
@@ -134,15 +136,15 @@ public class aDoubanReader extends ListActivity {
 
         @Override
         protected void onPostExecute(Book book) {
-            currentStatus = currentStatus + 1000 / bookListSize;
+            currentStatus = currentStatus + PROGRESS_BAR_MAX / bookListSize;
             progressBar.setProgress(currentStatus);
             if (!book.isEmpty()) {
                 bookArrayAdapter.add(book);
                 bookArrayAdapter.notifyDataSetChanged();
             }
 
-            if(currentStatus >= 1000){
-                progressBar.setProgress(1000);
+            if(currentStatus >= PROGRESS_BAR_MAX){
+                progressBar.setProgress(PROGRESS_BAR_MAX);
                 progressBar.setVisibility(View.GONE);
             }
         }
