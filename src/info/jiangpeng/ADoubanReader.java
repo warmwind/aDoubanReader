@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -64,6 +66,23 @@ public class aDoubanReader extends ListActivity {
         startActivity(myIntent);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                System.out.println("-----refreshed");
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private void parseBookList(String rawString) {
         try {
             JSONArray entryArray = new JSONObject(rawString).getJSONArray("entry");
@@ -93,12 +112,11 @@ public class aDoubanReader extends ListActivity {
 
     private void parseMetadataJson(JSONObject jsonBook, Book book) throws JSONException {
         JSONArray metadataArray = jsonBook.getJSONArray("db:attribute");
-        for(int i =0;i< metadataArray.length();i++){
+        for (int i = 0; i < metadataArray.length(); i++) {
             JSONObject metaJson = metadataArray.getJSONObject(i);
-            if(metaJson.getString("@name").equals("publisher")){
+            if (metaJson.getString("@name").equals("publisher")) {
                 book.setPublisher(metaJson.getString("$t"));
-            }
-            else if(metaJson.getString("@name").equals("pubdate")){
+            } else if (metaJson.getString("@name").equals("pubdate")) {
                 book.setPubDate(metaJson.getString("$t"));
             }
         }
@@ -108,10 +126,9 @@ public class aDoubanReader extends ListActivity {
         JSONArray linkArray = jsonBook.getJSONArray("link");
         for (int i = 0; i < linkArray.length(); i++) {
             JSONObject linkJson = linkArray.getJSONObject(i);
-            if(linkJson.getString("@rel").equals("alternate")){
+            if (linkJson.getString("@rel").equals("alternate")) {
                 book.setBookUrlInWeb(linkJson.getString("@href"));
-             }
-            else if(linkJson.getString("@rel").equals("image")){
+            } else if (linkJson.getString("@rel").equals("image")) {
                 String imageUrl = linkJson.getString("@href");
                 book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
             }
@@ -143,7 +160,7 @@ public class aDoubanReader extends ListActivity {
                 bookArrayAdapter.notifyDataSetChanged();
             }
 
-            if(currentStatus >= PROGRESS_BAR_MAX){
+            if (currentStatus >= PROGRESS_BAR_MAX) {
                 progressBar.setProgress(PROGRESS_BAR_MAX);
                 progressBar.setVisibility(View.GONE);
             }
