@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +15,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,13 +51,11 @@ public class aDoubanReader extends ListActivity {
         progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
 
         Intent intent = getIntent();
-        String rawString = intent.getStringExtra(SearchActivity.RAW_SEARCH_RESULT);
-        if (rawString != null) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            new Search().execute(query);
             progressBar.setVisibility(View.VISIBLE);
-            parseBookList(rawString);
-            bookArrayAdapter.notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -135,6 +137,39 @@ public class aDoubanReader extends ListActivity {
         }
     }
 
+    private String searchBookList(String query) throws IOException {
+        Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
+                appendQueryParameter("alt", "json").
+                appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
+                appendQueryParameter("max-results", "20").
+                appendQueryParameter("q", query).build();
+
+        HttpGet request = new HttpGet(uri.toString());
+
+        return EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
+    }
+
+
+    private class Search extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                return searchBookList(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            parseBookList(s);
+            bookArrayAdapter.notifyDataSetChanged();
+        }
+    }
+
+
     private class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
 
         public static final int PROGRESS_BAR_MAX = 1000;
@@ -142,6 +177,7 @@ public class aDoubanReader extends ListActivity {
         @Override
         protected Book doInBackground(JSONObject... jsonObjects) {
             try {
+                progressBar.setVisibility(View.VISIBLE);
                 return parseBook(jsonObjects[0]);
             } catch (JSONException e) {
                 e.printStackTrace();
