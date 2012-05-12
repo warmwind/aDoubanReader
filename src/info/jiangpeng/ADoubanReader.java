@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -31,6 +32,8 @@ public class aDoubanReader extends ListActivity {
     private int currentStatus;
     private int bookListSize;
     private ProgressBar progressBar;
+    private String query;
+    private boolean canLoadMore;
 
 
     @Override
@@ -39,23 +42,52 @@ public class aDoubanReader extends ListActivity {
 
         setContentView(R.layout.main);
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        initSearchBar();
 
-        SearchView searchView = (SearchView) findViewById(R.id.search);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        ListView mainView = getListView();
-        bookArrayAdapter = new SearchResultAdapter(this, R.layout.book_item, R.id.book_title);
-        mainView.setAdapter(bookArrayAdapter);
-
+        initAdapter();
+        canLoadMore = false;
         progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
 
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            query = intent.getStringExtra(SearchManager.QUERY);
             new Search().execute(query);
             progressBar.setVisibility(View.VISIBLE);
+
         }
+
+        this.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastInScreen = firstVisibleItem + visibleItemCount;
+                System.out.println("-------scrolled");
+                if (lastInScreen == totalItemCount && canLoadMore) {
+                    final Search search = new Search();
+                    search.setStartIndex(totalItemCount);
+                    search.execute(query);
+                    canLoadMore = false;
+                }
+            }
+        });
+
+    }
+
+    private void initAdapter() {
+        ListView mainView = getListView();
+        bookArrayAdapter = new SearchResultAdapter(this, R.layout.book_item, R.id.book_title);
+        mainView.setAdapter(bookArrayAdapter);
+    }
+
+    private void initSearchBar() {
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = (SearchView) findViewById(R.id.search);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     }
 
     @Override
@@ -69,7 +101,8 @@ public class aDoubanReader extends ListActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
@@ -137,20 +170,13 @@ public class aDoubanReader extends ListActivity {
         }
     }
 
-    private String searchBookList(String query) throws IOException {
-        Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
-                appendQueryParameter("alt", "json").
-                appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
-                appendQueryParameter("max-results", "20").
-                appendQueryParameter("q", query).build();
-
-        HttpGet request = new HttpGet(uri.toString());
-
-        return EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
-    }
-
-
     private class Search extends AsyncTask<String, Integer, String> {
+
+        private int startIndex;
+
+        public void setStartIndex(int startIndex) {
+            this.startIndex = startIndex;
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -164,8 +190,22 @@ public class aDoubanReader extends ListActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            System.out.println("------------s = " + s);
             parseBookList(s);
             bookArrayAdapter.notifyDataSetChanged();
+        }
+
+        private String searchBookList(String query) throws IOException {
+            Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
+                    appendQueryParameter("alt", "json").
+                    appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
+        appendQueryParameter("max-results", "20").
+                    appendQueryParameter("start-index", String.valueOf(startIndex)).
+                    appendQueryParameter("q", query).build();
+
+            HttpGet request = new HttpGet(uri.toString());
+
+            return EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
         }
     }
 
@@ -177,7 +217,12 @@ public class aDoubanReader extends ListActivity {
         @Override
         protected Book doInBackground(JSONObject... jsonObjects) {
             try {
-                progressBar.setVisibility(View.VISIBLE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                });
                 return parseBook(jsonObjects[0]);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -188,18 +233,25 @@ public class aDoubanReader extends ListActivity {
         }
 
         @Override
-        protected void onPostExecute(Book book) {
-            currentStatus = currentStatus + PROGRESS_BAR_MAX / bookListSize;
-            progressBar.setProgress(currentStatus);
-            if (!book.isEmpty()) {
-                bookArrayAdapter.add(book);
-                bookArrayAdapter.notifyDataSetChanged();
-            }
+        protected void onPostExecute(final Book book) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    currentStatus = currentStatus + PROGRESS_BAR_MAX / bookListSize;
+                    progressBar.setProgress(currentStatus);
+                    if (!book.isEmpty()) {
+                        bookArrayAdapter.add(book);
+                        bookArrayAdapter.notifyDataSetChanged();
+                    }
 
-            if (currentStatus >= PROGRESS_BAR_MAX) {
-                progressBar.setProgress(PROGRESS_BAR_MAX);
-                progressBar.setVisibility(View.GONE);
-            }
+                    if (currentStatus >= PROGRESS_BAR_MAX) {
+                        progressBar.setProgress(PROGRESS_BAR_MAX);
+                        progressBar.setVisibility(View.GONE);
+                        canLoadMore = true;
+
+                    }
+                }
+            });
         }
     }
 
