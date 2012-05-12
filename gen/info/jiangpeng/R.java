@@ -29,7 +29,7 @@ public final class R {
         public static final int book_publisher=0x7f080005;
         public static final int book_rate=0x7f080004;
         public static final int book_title=0x7f080002;
-        public static final int refresh=0x7f08000a;
+        public static final int more=0x7f08000a;
         public static final int search=0x7f080009;
         public static final int search_bar=0x7f080007;
         public static final int search_progress_bar=0x7f080008;
@@ -45,7 +45,7 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f060000;
-        public static final int refresh=0x7f060003;
+        public static final int load_more=0x7f060003;
         public static final int search_hint=0x7f060001;
         public static final int search_url=0x7f060002;
     }

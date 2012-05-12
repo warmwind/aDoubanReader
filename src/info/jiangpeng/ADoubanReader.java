@@ -44,15 +44,13 @@ public class aDoubanReader extends ListActivity {
 
         initSearchBar();
 
-
         initAdapter();
-        canLoadMore = false;
         progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
 
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            new Search().execute(query);
+            new Search(bookArrayAdapter.getCount()).execute(query);
             progressBar.setVisibility(View.VISIBLE);
 
         }
@@ -65,16 +63,17 @@ public class aDoubanReader extends ListActivity {
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int lastInScreen = firstVisibleItem + visibleItemCount;
-                System.out.println("-------scrolled");
                 if (lastInScreen == totalItemCount && canLoadMore) {
-                    final Search search = new Search();
-                    search.setStartIndex(totalItemCount);
-                    search.execute(query);
-                    canLoadMore = false;
+                    executeSearch();
                 }
             }
         });
 
+    }
+
+    private void executeSearch() {
+        new Search(bookArrayAdapter.getCount()).execute(query);
+        canLoadMore = false;
     }
 
     private void initAdapter() {
@@ -110,8 +109,8 @@ public class aDoubanReader extends ListActivity {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh:
-                System.out.println("-----refreshed");
+            case R.id.more:
+                executeSearch();
                 return true;
             default:
                 return false;
@@ -174,7 +173,7 @@ public class aDoubanReader extends ListActivity {
 
         private int startIndex;
 
-        public void setStartIndex(int startIndex) {
+        private Search(int startIndex) {
             this.startIndex = startIndex;
         }
 
@@ -198,7 +197,7 @@ public class aDoubanReader extends ListActivity {
         private String searchBookList(String query) throws IOException {
             Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
                     appendQueryParameter("alt", "json").
-                    appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
+//                    appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
         appendQueryParameter("max-results", "20").
                     appendQueryParameter("start-index", String.valueOf(startIndex)).
                     appendQueryParameter("q", query).build();
@@ -248,7 +247,6 @@ public class aDoubanReader extends ListActivity {
                         progressBar.setProgress(PROGRESS_BAR_MAX);
                         progressBar.setVisibility(View.GONE);
                         canLoadMore = true;
-
                     }
                 }
             });
