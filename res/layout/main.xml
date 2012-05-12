@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:background="@drawable/main_bg"
+
 
         >
     <ImageView android:src="@drawable/app_main_logo"
@@ -16,7 +16,7 @@
     <info.jiangpeng.SearchBar android:id="@+id/search_bar"
                               android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
-                              android:background="@color/search_bar_background"
+
             />
     <ListView android:id="@android:id/list"
               android:layout_width="fill_parent"
