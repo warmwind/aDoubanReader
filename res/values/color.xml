@@ -3,4 +3,5 @@
     <color name="book_item_color">#000000</color>
     <color name="toast_bg">#757575</color>
     <color name="toast_text">#FFF</color>
+    <color name="book_item_divider">##77A04E</color>
 </resources>
