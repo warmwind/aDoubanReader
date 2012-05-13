@@ -5,8 +5,7 @@
               android:layout_height="fill_parent"
               android:padding="10dp"
               android:background="@color/toast_bg"
-              android:id="@+id/toast"
-
+              android:id="@+id/toast">
         >
 
     <ImageView android:id="@+id/toast_image"

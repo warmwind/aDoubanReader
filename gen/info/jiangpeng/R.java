@@ -12,6 +12,7 @@ public final class R {
     }
     public static final class color {
         public static final int book_item_color=0x7f050001;
+        public static final int book_item_divider=0x7f050004;
         public static final int search_bar_bg=0x7f050000;
         public static final int toast_bg=0x7f050002;
         public static final int toast_text=0x7f050003;

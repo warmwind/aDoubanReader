@@ -256,8 +256,8 @@ public class aDoubanReader extends ListActivity {
         TextView text = (TextView) layout.findViewById(R.id.toast_message);
         text.setText(bookListSize + " book(s) loaded");
         Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.TOP, 0, 80);
-        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 50);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
     }
