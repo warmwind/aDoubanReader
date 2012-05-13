@@ -9,13 +9,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
+import android.view.*;
+import android.widget.*;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -197,8 +192,8 @@ public class aDoubanReader extends ListActivity {
         private String searchBookList(String query) throws IOException {
             Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
                     appendQueryParameter("alt", "json").
-//                    appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
-        appendQueryParameter("max-results", "20").
+                    appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
+                    appendQueryParameter("max-results", "20").
                     appendQueryParameter("start-index", String.valueOf(startIndex)).
                     appendQueryParameter("q", query).build();
 
@@ -247,10 +242,24 @@ public class aDoubanReader extends ListActivity {
                         progressBar.setProgress(PROGRESS_BAR_MAX);
                         progressBar.setVisibility(View.GONE);
                         canLoadMore = true;
+                        currentStatus = 0;
+                        makeToast();
                     }
                 }
             });
         }
+    }
+
+    private void makeToast() {
+        View layout = getLayoutInflater().inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toast));
+
+        TextView text = (TextView) layout.findViewById(R.id.toast_message);
+        text.setText(bookListSize + " book(s) loaded");
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP, 0, 80);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
     }
 
 }

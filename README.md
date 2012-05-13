@@ -22,3 +22,5 @@ To Do List:
 8. Add empty search result screen
 
 9. Add title bar
+
+10. Add my follows reading status

@@ -12,14 +12,17 @@ public final class R {
     }
     public static final class color {
         public static final int book_item_color=0x7f050001;
-        public static final int search_bar_background=0x7f050000;
+        public static final int search_bar_bg=0x7f050000;
+        public static final int toast_bg=0x7f050002;
+        public static final int toast_text=0x7f050003;
     }
     public static final class drawable {
         public static final int app_main_logo=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int ic_reload=0x7f020002;
-        public static final int main_bg=0x7f020003;
-        public static final int main_bg2=0x7f020004;
+        public static final int douban=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int ic_reload=0x7f020003;
+        public static final int main_bg=0x7f020004;
+        public static final int main_bg2=0x7f020005;
     }
     public static final class id {
         public static final int book_author=0x7f080003;
@@ -29,16 +32,20 @@ public final class R {
         public static final int book_publisher=0x7f080005;
         public static final int book_rate=0x7f080004;
         public static final int book_title=0x7f080002;
-        public static final int more=0x7f08000a;
+        public static final int more=0x7f08000d;
         public static final int search=0x7f080009;
         public static final int search_bar=0x7f080007;
         public static final int search_progress_bar=0x7f080008;
+        public static final int toast=0x7f08000a;
+        public static final int toast_image=0x7f08000b;
+        public static final int toast_message=0x7f08000c;
     }
     public static final class layout {
         public static final int book_details_web=0x7f030000;
         public static final int book_item=0x7f030001;
         public static final int main=0x7f030002;
         public static final int search_bar=0x7f030003;
+        public static final int toast=0x7f030004;
     }
     public static final class menu {
         public static final int menu=0x7f070000;

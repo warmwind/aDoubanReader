@@ -1,4 +1,6 @@
 <resources>
-    <color name="search_bar_background">#E9F4E9</color>
+    <color name="search_bar_bg">#E9F4E9</color>
     <color name="book_item_color">#000000</color>
+    <color name="toast_bg">#757575</color>
+    <color name="toast_text">#FFF</color>
 </resources>
