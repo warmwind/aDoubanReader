@@ -104,8 +104,11 @@ public class aDoubanReader extends ListActivity {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.more:
+            case R.id.menu_more:
                 executeSearch();
+                return true;
+            case R.id.menu_signin:
+                startActivity(new Intent(getApplicationContext(), SigninScreen.class));
                 return true;
             default:
                 return false;
