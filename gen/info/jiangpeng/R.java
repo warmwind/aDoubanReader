@@ -34,18 +34,19 @@ public final class R {
         public static final int book_publisher=0x7f080005;
         public static final int book_rate=0x7f080004;
         public static final int book_title=0x7f080002;
-        public static final int email=0x7f08000a;
-        public static final int menu_more=0x7f080011;
-        public static final int menu_signin=0x7f080012;
-        public static final int myinfo_bt=0x7f08000d;
-        public static final int password=0x7f08000b;
-        public static final int search=0x7f080009;
-        public static final int search_bar=0x7f080007;
-        public static final int search_progress_bar=0x7f080008;
-        public static final int signin_bt=0x7f08000c;
-        public static final int toast=0x7f08000e;
-        public static final int toast_image=0x7f08000f;
-        public static final int toast_message=0x7f080010;
+        public static final int email=0x7f08000b;
+        public static final int menu_more=0x7f080012;
+        public static final int menu_signin=0x7f080013;
+        public static final int myinfo_bt=0x7f08000e;
+        public static final int password=0x7f08000c;
+        public static final int search=0x7f08000a;
+        public static final int search_bar=0x7f080008;
+        public static final int search_progress_bar=0x7f080009;
+        public static final int signin_bt=0x7f08000d;
+        public static final int toast=0x7f08000f;
+        public static final int toast_image=0x7f080010;
+        public static final int toast_message=0x7f080011;
+        public static final int user=0x7f080007;
     }
     public static final class layout {
         public static final int book_details_web=0x7f030000;

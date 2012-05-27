@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -11,6 +12,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import oauth.signpost.basic.DefaultOAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.basic.UrlStringRequestAdapter;
+import oauth.signpost.http.HttpRequest;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -23,19 +28,71 @@ import java.net.URL;
 
 public class aDoubanReader extends ListActivity {
 
+    public static final String USER = "USER";
     private SearchResultAdapter bookArrayAdapter;
     private int currentStatus;
     private int bookListSize;
     private ProgressBar progressBar;
     private String query;
     private boolean canLoadMore;
-
+    public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
+    public static final String REQUEST_TOKEN = "REQUEST_TOKEN";
+    public static final String REQUEST_TOKEN_SECRET = "REQUEST_TOKEN_SECRET";
+    private SharedPreferences preferences;
+    private DefaultOAuthConsumer consumer;
+    private DefaultOAuthProvider authProvider;
+    private TextView signIn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+
+        signIn = (TextView) findViewById(R.id.user);
+        preferences = getPreferences(MODE_PRIVATE);
+        String user = preferences.getString(USER, "");
+
+        if (user.equals("")) {
+            signIn.setText(R.string.sign_in);
+        } else {
+            signIn.setText(user);
+        }
+
+        String consumerKey = "0d5f0a33b677be10281d1e9b23673a30";
+        String consumerSecret = "d66dc447cdfa7eeb";
+        consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+        authProvider = new DefaultOAuthProvider("http://www.douban.com/service/auth/request_token", "http://www.douban.com/service/auth/access_token", "http://www.douban.com/service/auth/authorize");
+
+        signIn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        if (preferences.getString(USER, "").equals("")) {
+                            try {
+
+                                String url1 = authProvider.retrieveRequestToken(consumer, "vtbapp-doudou:///");
+                                setRequestToken();
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
+                                startActivity(browserIntent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            SharedPreferences.Editor edit = preferences.edit();
+                            edit.putString(USER, "");
+                            edit.commit();
+                            signIn.setText(R.string.sign_in);
+                        }
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+        });
 
         initSearchBar();
 
@@ -64,6 +121,39 @@ public class aDoubanReader extends ListActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            Uri uri = this.getIntent().getData();
+            if (uri != null) {
+                preferences = getPreferences(MODE_PRIVATE);
+
+                consumer.setTokenWithSecret(preferences.getString(REQUEST_TOKEN, ""), preferences.getString(REQUEST_TOKEN_SECRET, ""));
+                authProvider.retrieveAccessToken(consumer, null);
+                setAccessToken(preferences);
+
+
+                consumer.setTokenWithSecret(preferences.getString(ACCESS_TOKEN, ""), preferences.getString(ACCESS_TOKEN_SECRET, ""));
+
+                HttpRequest request = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/%40me?alt=json"));
+                String requestUrl = request.getRequestUrl();
+                String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
+
+                JSONObject jsonObject = new JSONObject(s1);
+                String userName = jsonObject.getJSONObject("title").getString("$t");
+
+                SharedPreferences.Editor edit = preferences.edit();
+                edit.putString(USER, userName);
+                edit.commit();
+                signIn.setText(userName + "(Sign Out)");
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void executeSearch() {
@@ -106,9 +196,6 @@ public class aDoubanReader extends ListActivity {
         switch (item.getItemId()) {
             case R.id.menu_more:
                 executeSearch();
-                return true;
-            case R.id.menu_signin:
-                startActivity(new Intent(getApplicationContext(), SigninScreen.class));
                 return true;
             default:
                 return false;
@@ -262,6 +349,21 @@ public class aDoubanReader extends ListActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
+    }
+
+    private void setRequestToken() {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(REQUEST_TOKEN, consumer.getToken());
+        edit.putString(REQUEST_TOKEN_SECRET, consumer.getTokenSecret());
+        edit.commit();
+    }
+
+    private void setAccessToken(SharedPreferences preferences) {
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(ACCESS_TOKEN, consumer.getToken());
+        edit.putString(ACCESS_TOKEN_SECRET, consumer.getTokenSecret());
+        edit.commit();
     }
 
 }
