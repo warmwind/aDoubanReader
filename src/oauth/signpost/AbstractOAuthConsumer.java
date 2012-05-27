@@ -182,9 +182,6 @@ public abstract class AbstractOAuthConsumer implements OAuthConsumer {
         if (!out.containsKey(OAuth.OAUTH_NONCE)) {
             out.put(OAuth.OAUTH_NONCE, generateNonce(), true);
         }
-//        if (!out.containsKey(OAuth.OAUTH_VERSION)) {
-//            out.put(OAuth.OAUTH_VERSION, OAuth.VERSION_1_0, true);
-//        }
         if (!out.containsKey(OAuth.OAUTH_TOKEN)) {
             if (token != null && !token.equals("") || sendEmptyTokens) {
                 out.put(OAuth.OAUTH_TOKEN, token, true);

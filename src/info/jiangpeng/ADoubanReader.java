@@ -187,7 +187,6 @@ public class aDoubanReader extends ListActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            System.out.println("------------s = " + s);
             parseBookList(s);
             bookArrayAdapter.notifyDataSetChanged();
         }
