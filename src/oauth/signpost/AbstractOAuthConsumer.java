@@ -63,7 +63,7 @@ public abstract class AbstractOAuthConsumer implements OAuthConsumer {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
         setMessageSigner(new HmacSha1MessageSigner());
-        setSigningStrategy(new AuthorizationHeaderSigningStrategy());
+        setSigningStrategy(new QueryStringSigningStrategy());
     }
 
     public void setMessageSigner(OAuthMessageSigner messageSigner) {

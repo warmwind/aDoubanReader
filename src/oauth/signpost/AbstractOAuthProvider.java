@@ -10,11 +10,6 @@
  */
 package oauth.signpost;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
@@ -23,6 +18,9 @@ import oauth.signpost.http.HttpParameters;
 import oauth.signpost.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ABC for all provider implementations. If you're writing a custom provider,
