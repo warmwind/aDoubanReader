@@ -1,6 +1,7 @@
-package info.jiangpeng;
+package info.jiangpeng.model;
 
-public class Account {
+public class User {
+
     private String name;
     private String id;
 
@@ -19,4 +20,9 @@ public class Account {
     public void setId(String id) {
         this.id = id;
     }
+
+    public boolean isSignedIn(){
+        return !(this instanceof NullUser);
+    }
 }
+

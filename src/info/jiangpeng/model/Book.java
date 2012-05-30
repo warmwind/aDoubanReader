@@ -1,4 +1,4 @@
-package info.jiangpeng;
+package info.jiangpeng.model;
 
 import android.graphics.drawable.BitmapDrawable;
 

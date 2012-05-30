@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import info.jiangpeng.model.Book;
 
 import java.io.IOException;
 import java.net.URL;

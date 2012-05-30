@@ -10,9 +10,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
-import info.jiangpeng.helper.AccountParser;
+import info.jiangpeng.helper.UserParser;
 import info.jiangpeng.helper.CommonBookParser;
 import info.jiangpeng.helper.MyBookParser;
+import info.jiangpeng.model.NullUser;
+import info.jiangpeng.model.User;
+import info.jiangpeng.model.Book;
 import info.jiangpeng.sign.OAuthFactory;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
@@ -29,18 +32,18 @@ import java.io.IOException;
 
 public class MainActivity extends ListActivity {
 
-    public static final String USER = "USER";
-    public static final String USER_ID = "USER_ID";
+    private static String accessToken;
+    private static String accessTokenSceret;
+    private static String requestToken;
+    private static String requestTokenSceret;
+    private static User user = new NullUser();
+
     private SearchResultAdapter bookArrayAdapter;
     private int currentStatus;
     private int bookListSize;
     private ProgressBar progressBar;
     private String query;
     private boolean canLoadMore;
-    private static  String accessToken;
-    private static  String accessTokenSceret;
-    private static  String requestToken;
-    private static  String requestTokenSceret;
 
     private SharedPreferences preferences;
     private DefaultOAuthConsumer consumer;
@@ -53,15 +56,10 @@ public class MainActivity extends ListActivity {
 
         setContentView(R.layout.main);
 
-        signIn = (TextView) findViewById(R.id.user);
-        preferences = getPreferences(MODE_PRIVATE);
-        String user = preferences.getString(USER, "");
 
-        if (user.equals("")) {
-            signIn.setText(R.string.sign_in);
-        } else {
-            signIn.setText(user);
-        }
+        signIn = (TextView) findViewById(R.id.user);
+
+        signIn.setText(user.getName());
 
         consumer = OAuthFactory.createConsumer();
         authProvider = new DefaultOAuthProvider("http://www.douban.com/service/auth/request_token", "http://www.douban.com/service/auth/access_token", "http://www.douban.com/service/auth/authorize");
@@ -71,9 +69,11 @@ public class MainActivity extends ListActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
-                        if (preferences.getString(USER, "").equals("")) {
+                        if (user.isSignedIn()) {
+                            user = new NullUser();
+                            signIn.setText(user.getName());
+                        } else {
                             try {
-
                                 String url1 = authProvider.retrieveRequestToken(consumer, "vtbapp-doudou:///");
 
                                 requestToken = consumer.getToken();
@@ -83,12 +83,6 @@ public class MainActivity extends ListActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-                        } else {
-                            SharedPreferences.Editor edit = preferences.edit();
-                            edit.putString(USER, "");
-                            edit.commit();
-                            signIn.setText(R.string.sign_in);
                         }
                         return true;
                     default:
@@ -148,12 +142,8 @@ public class MainActivity extends ListActivity {
 
                 System.out.println("------------s1 = " + s1);
 
-                Account account = new AccountParser().parse(s1);
-                SharedPreferences.Editor edit = preferences.edit();
-                edit.putString(USER, account.getName());
-                edit.putString(USER_ID, account.getId());
-                edit.commit();
-                signIn.setText(account.getName());
+                user = new UserParser().parse(s1);
+                signIn.setText(user.getName());
 
             }
         } catch (Exception e) {
@@ -199,11 +189,7 @@ public class MainActivity extends ListActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (preferences.getString(USER, "").equals("")) {
-            menu.findItem(R.id.menu_my_books).setVisible(false);
-        } else {
-            menu.findItem(R.id.menu_my_books).setVisible(true);
-        }
+        menu.findItem(R.id.menu_my_books).setVisible(user.isSignedIn());
         return true;
     }
 
@@ -221,9 +207,8 @@ public class MainActivity extends ListActivity {
                     consumer = OAuthFactory.createConsumer();
 
                     consumer.setTokenWithSecret(accessToken, accessTokenSceret);
-                    String userId = preferences.getString(USER_ID, "");
 
-                    String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/"+ userId+"/collection?cat=book&alt=json")).getRequestUrl();
+                    String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + user.getId() + "/collection?cat=book&alt=json")).getRequestUrl();
                     String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
 
 

@@ -1,6 +1,6 @@
 package info.jiangpeng.helper;
 
-import info.jiangpeng.Book;
+import info.jiangpeng.model.Book;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
