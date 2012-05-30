@@ -5,21 +5,18 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import info.jiangpeng.helper.AccountParser;
 import info.jiangpeng.helper.CommonBookParser;
 import info.jiangpeng.helper.MyBookParser;
+import info.jiangpeng.sign.OAuthFactory;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.UrlStringRequestAdapter;
-import oauth.signpost.exception.OAuthCommunicationException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.http.HttpRequest;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -29,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class MainActivity extends ListActivity {
 
@@ -66,9 +62,7 @@ public class MainActivity extends ListActivity {
             signIn.setText(user);
         }
 
-        String consumerKey = "0d5f0a33b677be10281d1e9b23673a30";
-        String consumerSecret = "d66dc447cdfa7eeb";
-        consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+        consumer = OAuthFactory.createConsumer();
         authProvider = new DefaultOAuthProvider("http://www.douban.com/service/auth/request_token", "http://www.douban.com/service/auth/access_token", "http://www.douban.com/service/auth/authorize");
 
         signIn.setOnTouchListener(new View.OnTouchListener() {
@@ -149,16 +143,13 @@ public class MainActivity extends ListActivity {
                 String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
 
                 System.out.println("------------s1 = " + s1);
-                JSONObject jsonObject = new JSONObject(s1);
-                String userName = jsonObject.getJSONObject("title").getString("$t");
-                String userId = jsonObject.getJSONObject("db:uid").getString("$t");
 
-
+                Account account = new AccountParser().parse(s1);
                 SharedPreferences.Editor edit = preferences.edit();
-                edit.putString(USER, userName);
-                edit.putString(USER_ID, userId);
+                edit.putString(USER, account.getName());
+                edit.putString(USER_ID, account.getId());
                 edit.commit();
-                signIn.setText(userName);
+                signIn.setText(account.getName());
 
             }
         } catch (Exception e) {
@@ -223,16 +214,14 @@ public class MainActivity extends ListActivity {
                     bookArrayAdapter.clear();
                     preferences = getPreferences(MODE_PRIVATE);
 
-                    String consumerKey = "0d5f0a33b677be10281d1e9b23673a30";
-                    String consumerSecret = "d66dc447cdfa7eeb";
-                    consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+                    consumer = OAuthFactory.createConsumer();
 
                     consumer.setTokenWithSecret(preferences.getString(ACCESS_TOKEN, ""), preferences.getString(ACCESS_TOKEN_SECRET, ""));
                     String userId = preferences.getString(USER_ID, "");
-                    System.out.println("------------userId = " + userId);
+
                     String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/"+ userId+"/collection?cat=book&alt=json")).getRequestUrl();
                     String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
-                    System.out.println("------------s1 = " + s1);
+
 
                     JSONObject jsonObject = new JSONObject(s1);
                     JSONArray entry = jsonObject.getJSONArray("entry");
