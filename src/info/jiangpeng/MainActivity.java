@@ -4,31 +4,32 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
-import info.jiangpeng.helper.UserParser;
 import info.jiangpeng.helper.CommonBookParser;
 import info.jiangpeng.helper.MyBookParser;
+import info.jiangpeng.helper.UserParser;
+import info.jiangpeng.model.Book;
 import info.jiangpeng.model.NullUser;
 import info.jiangpeng.model.User;
-import info.jiangpeng.model.Book;
+import info.jiangpeng.sign.CustomOAuthConsumer;
 import info.jiangpeng.sign.OAuthFactory;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.UrlStringRequestAdapter;
-import oauth.signpost.http.HttpRequest;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.exception.OAuthNotAuthorizedException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 public class MainActivity extends ListActivity {
 
@@ -45,8 +46,6 @@ public class MainActivity extends ListActivity {
     private String query;
     private boolean canLoadMore;
 
-    private SharedPreferences preferences;
-    private DefaultOAuthConsumer consumer;
     private DefaultOAuthProvider authProvider;
     private TextView signIn;
 
@@ -56,12 +55,10 @@ public class MainActivity extends ListActivity {
 
         setContentView(R.layout.main);
 
-
         signIn = (TextView) findViewById(R.id.user);
-
         signIn.setText(user.getName());
 
-        consumer = OAuthFactory.createConsumer();
+
         authProvider = new DefaultOAuthProvider("http://www.douban.com/service/auth/request_token", "http://www.douban.com/service/auth/access_token", "http://www.douban.com/service/auth/authorize");
 
         signIn.setOnTouchListener(new View.OnTouchListener() {
@@ -74,12 +71,7 @@ public class MainActivity extends ListActivity {
                             signIn.setText(user.getName());
                         } else {
                             try {
-                                String url1 = authProvider.retrieveRequestToken(consumer, "vtbapp-doudou:///");
-
-                                requestToken = consumer.getToken();
-                                requestTokenSceret = consumer.getTokenSecret();
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
-                                startActivity(browserIntent);
+                                retrieveRequestToken();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -92,7 +84,6 @@ public class MainActivity extends ListActivity {
         });
 
         initSearchBar();
-
         initAdapter();
         progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
 
@@ -126,29 +117,35 @@ public class MainActivity extends ListActivity {
         try {
             Uri uri = this.getIntent().getData();
             if (uri != null) {
-                preferences = getPreferences(MODE_PRIVATE);
 
-                consumer.setTokenWithSecret(requestToken, requestTokenSceret);
-                authProvider.retrieveAccessToken(consumer, null);
-                accessToken = consumer.getToken();
-                accessTokenSceret = consumer.getTokenSecret();
+                DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+                retrieveAccessToken(consumer);
 
-
-                consumer.setTokenWithSecret(accessToken, accessTokenSceret);
-
-                HttpRequest request = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/%40me?alt=json"));
-                String requestUrl = request.getRequestUrl();
-                String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
-
-                System.out.println("------------s1 = " + s1);
-
-                user = new UserParser().parse(s1);
+                CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(consumer.getToken(), consumer.getTokenSecret());
+                user = new UserParser().parse(consumerSignedIn.executeAfterSignIn("http://api.douban.com/people/%40me?alt=json"));
                 signIn.setText(user.getName());
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void retrieveRequestToken() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
+        DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+        String url1 = authProvider.retrieveRequestToken(consumer, "vtbapp-doudou:///");
+
+        requestToken = consumer.getToken();
+        requestTokenSceret = consumer.getTokenSecret();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
+        startActivity(browserIntent);
+    }
+
+    private void retrieveAccessToken(DefaultOAuthConsumer consumer) throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
+        consumer.setTokenWithSecret(requestToken, requestTokenSceret);
+        authProvider.retrieveAccessToken(consumer, null);
+        accessToken = consumer.getToken();
+        accessTokenSceret = consumer.getTokenSecret();
     }
 
     private void executeSearch() {
@@ -202,10 +199,8 @@ public class MainActivity extends ListActivity {
             case R.id.menu_my_books:
                 try {
                     bookArrayAdapter.clear();
-                    preferences = getPreferences(MODE_PRIVATE);
 
-                    consumer = OAuthFactory.createConsumer();
-
+                    DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
                     consumer.setTokenWithSecret(accessToken, accessTokenSceret);
 
                     String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + user.getId() + "/collection?cat=book&alt=json")).getRequestUrl();
@@ -256,7 +251,7 @@ public class MainActivity extends ListActivity {
         protected String doInBackground(String... strings) {
             try {
                 return searchBookList(strings[0]);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return "";
@@ -268,7 +263,7 @@ public class MainActivity extends ListActivity {
             bookArrayAdapter.notifyDataSetChanged();
         }
 
-        private String searchBookList(String query) throws IOException {
+        private String searchBookList(String query) throws Exception {
             Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
                     appendQueryParameter("alt", "json").
                     appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
@@ -297,9 +292,7 @@ public class MainActivity extends ListActivity {
                     }
                 });
                 return new CommonBookParser().parse(jsonObjects[0]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return new Book();
@@ -310,7 +303,7 @@ public class MainActivity extends ListActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    currentStatus = currentStatus + PROGRESS_BAR_MAX / bookListSize;
+                    currentStatus += PROGRESS_BAR_MAX / bookListSize;
                     progressBar.setProgress(currentStatus);
                     if (!book.isEmpty()) {
                         bookArrayAdapter.add(book);
