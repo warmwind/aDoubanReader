@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import info.jiangpeng.helper.CommonBookParser;
+import info.jiangpeng.helper.MyBookParser;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.UrlStringRequestAdapter;
@@ -29,7 +31,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-public class aDoubanReader extends ListActivity {
+public class MainActivity extends ListActivity {
 
     public static final String USER = "USER";
     public static final String USER_ID = "USER_ID";
@@ -236,14 +238,8 @@ public class aDoubanReader extends ListActivity {
                     JSONArray entry = jsonObject.getJSONArray("entry");
                     int length = entry.length();
                     for (int i = 0; i < length; i++) {
-                        Book book = new Book();
-                        JSONObject jsonBook = entry.getJSONObject(i).getJSONObject("db:subject");
-                        book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
-                        JSONArray jsonAttribute = jsonBook.getJSONArray("db:attribute");
-                        book.setPublisher(jsonAttribute.getJSONObject(4).getString("$t"));
-                        book.setStatus(entry.getJSONObject(i).getJSONObject("db:status").getString("$t"));
 
-                        bookArrayAdapter.add(book);
+                        bookArrayAdapter.add(new MyBookParser().parse(entry.getJSONObject(i)));
                     }
                     bookArrayAdapter.notifyDataSetChanged();
 
@@ -267,45 +263,6 @@ public class aDoubanReader extends ListActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-
-    private Book parseBook(JSONObject jsonBook) throws JSONException, IOException {
-        Book book = new Book();
-
-        book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
-        parseLinkJson(jsonBook, book);
-
-        book.setAuthor(jsonBook.getJSONArray("author").getJSONObject(0).getJSONObject("name").getString("$t"));
-        book.setAverageRate(jsonBook.getJSONObject("gd:rating").getString("@average"));
-
-        parseMetadataJson(jsonBook, book);
-
-        return book;
-    }
-
-    private void parseMetadataJson(JSONObject jsonBook, Book book) throws JSONException {
-        JSONArray metadataArray = jsonBook.getJSONArray("db:attribute");
-        for (int i = 0; i < metadataArray.length(); i++) {
-            JSONObject metaJson = metadataArray.getJSONObject(i);
-            if (metaJson.getString("@name").equals("publisher")) {
-                book.setPublisher(metaJson.getString("$t"));
-            } else if (metaJson.getString("@name").equals("pubdate")) {
-                book.setPubDate(metaJson.getString("$t"));
-            }
-        }
-    }
-
-    private void parseLinkJson(JSONObject jsonBook, Book book) throws JSONException, IOException {
-        JSONArray linkArray = jsonBook.getJSONArray("link");
-        for (int i = 0; i < linkArray.length(); i++) {
-            JSONObject linkJson = linkArray.getJSONObject(i);
-            if (linkJson.getString("@rel").equals("alternate")) {
-                book.setBookUrlInWeb(linkJson.getString("@href"));
-            } else if (linkJson.getString("@rel").equals("image")) {
-                String imageUrl = linkJson.getString("@href");
-                book.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeStream(new URL(imageUrl).openStream())));
-            }
         }
     }
 
@@ -361,7 +318,7 @@ public class aDoubanReader extends ListActivity {
                         progressBar.setVisibility(View.VISIBLE);
                     }
                 });
-                return parseBook(jsonObjects[0]);
+                return new CommonBookParser().parse(jsonObjects[0]);
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {
