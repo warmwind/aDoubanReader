@@ -15,6 +15,9 @@ import android.widget.*;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.basic.UrlStringRequestAdapter;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.http.HttpRequest;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -29,6 +32,7 @@ import java.net.URL;
 public class aDoubanReader extends ListActivity {
 
     public static final String USER = "USER";
+    public static final String USER_ID = "USER_ID";
     private SearchResultAdapter bookArrayAdapter;
     private int currentStatus;
     private int bookListSize;
@@ -142,13 +146,17 @@ public class aDoubanReader extends ListActivity {
                 String requestUrl = request.getRequestUrl();
                 String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
 
+                System.out.println("------------s1 = " + s1);
                 JSONObject jsonObject = new JSONObject(s1);
                 String userName = jsonObject.getJSONObject("title").getString("$t");
+                String userId = jsonObject.getJSONObject("db:uid").getString("$t");
+
 
                 SharedPreferences.Editor edit = preferences.edit();
                 edit.putString(USER, userName);
+                edit.putString(USER_ID, userId);
                 edit.commit();
-                signIn.setText(userName + "(Sign Out)");
+                signIn.setText(userName);
 
             }
         } catch (Exception e) {
@@ -192,10 +200,57 @@ public class aDoubanReader extends ListActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (preferences.getString(USER, "").equals("")) {
+            menu.findItem(R.id.menu_my_books).setVisible(false);
+        } else {
+            menu.findItem(R.id.menu_my_books).setVisible(true);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_more:
                 executeSearch();
+                return true;
+            case R.id.menu_my_books:
+                try {
+                    bookArrayAdapter.clear();
+                    preferences = getPreferences(MODE_PRIVATE);
+
+                    String consumerKey = "0d5f0a33b677be10281d1e9b23673a30";
+                    String consumerSecret = "d66dc447cdfa7eeb";
+                    consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+
+                    consumer.setTokenWithSecret(preferences.getString(ACCESS_TOKEN, ""), preferences.getString(ACCESS_TOKEN_SECRET, ""));
+                    String userId = preferences.getString(USER_ID, "");
+                    System.out.println("------------userId = " + userId);
+                    String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/"+ userId+"/collection?cat=book&alt=json")).getRequestUrl();
+                    String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
+                    System.out.println("------------s1 = " + s1);
+
+                    JSONObject jsonObject = new JSONObject(s1);
+                    JSONArray entry = jsonObject.getJSONArray("entry");
+                    int length = entry.length();
+                    for (int i = 0; i < length; i++) {
+                        Book book = new Book();
+                        JSONObject jsonBook = entry.getJSONObject(i).getJSONObject("db:subject");
+                        book.setTitle(jsonBook.getJSONObject("title").getString("$t"));
+                        JSONArray jsonAttribute = jsonBook.getJSONArray("db:attribute");
+                        book.setPublisher(jsonAttribute.getJSONObject(4).getString("$t"));
+                        book.setStatus(entry.getJSONObject(i).getJSONObject("db:status").getString("$t"));
+
+                        bookArrayAdapter.add(book);
+                    }
+                    bookArrayAdapter.notifyDataSetChanged();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 return true;
             default:
                 return false;

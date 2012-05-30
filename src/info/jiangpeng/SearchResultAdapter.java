@@ -49,6 +49,7 @@ public class SearchResultAdapter extends ArrayAdapter<Book> {
         ((TextView) bookLayout.findViewById(R.id.book_rate)).setText(item.getAverageRate());
         ((TextView) bookLayout.findViewById(R.id.book_publisher)).setText(item.getPublisher());
         ((TextView) bookLayout.findViewById(R.id.book_pubdate)).setText(item.getPubDate());
+        ((TextView) bookLayout.findViewById(R.id.book_status)).setText(item.getStatus());
     }
 
 }

@@ -37,5 +37,11 @@
               android:layout_toRightOf="@id/book_image"
               android:layout_below="@id/book_publisher"
               android:textColor="@color/book_item_color"/>
+    <TextView android:id="@+id/book_status"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_toRightOf="@id/book_image"
+              android:layout_below="@id/book_pubdate"
+              android:textColor="@color/book_item_color"/>
 
 </RelativeLayout>

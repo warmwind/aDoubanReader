@@ -10,6 +10,7 @@ public class Book {
     private BitmapDrawable imageDrawable;
     private String publisher;
     private String pubDate;
+    private String status;
 
     public void setTitle(String title) {
         this.title = title;
@@ -69,5 +70,13 @@ public class Book {
 
     public String getPubDate() {
         return pubDate;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

@@ -5,8 +5,8 @@
           android:icon="@drawable/ic_reload"
           android:title="@string/load_more"
           />
-    <item android:id="@+id/menu_signin"
-          android:icon="@drawable/signin"
-          android:title="@string/sign_in"
+    <item android:id="@+id/menu_my_books"
+          android:icon="@drawable/my_books"
+          android:title="@string/my_books"
           />
 </menu>
