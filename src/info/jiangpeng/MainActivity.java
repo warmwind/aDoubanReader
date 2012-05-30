@@ -37,10 +37,11 @@ public class MainActivity extends ListActivity {
     private ProgressBar progressBar;
     private String query;
     private boolean canLoadMore;
-    public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-    public static final String ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
-    public static final String REQUEST_TOKEN = "REQUEST_TOKEN";
-    public static final String REQUEST_TOKEN_SECRET = "REQUEST_TOKEN_SECRET";
+    private static  String accessToken;
+    private static  String accessTokenSceret;
+    private static  String requestToken;
+    private static  String requestTokenSceret;
+
     private SharedPreferences preferences;
     private DefaultOAuthConsumer consumer;
     private DefaultOAuthProvider authProvider;
@@ -74,7 +75,9 @@ public class MainActivity extends ListActivity {
                             try {
 
                                 String url1 = authProvider.retrieveRequestToken(consumer, "vtbapp-doudou:///");
-                                setRequestToken();
+
+                                requestToken = consumer.getToken();
+                                requestTokenSceret = consumer.getTokenSecret();
                                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
                                 startActivity(browserIntent);
                             } catch (Exception e) {
@@ -131,12 +134,13 @@ public class MainActivity extends ListActivity {
             if (uri != null) {
                 preferences = getPreferences(MODE_PRIVATE);
 
-                consumer.setTokenWithSecret(preferences.getString(REQUEST_TOKEN, ""), preferences.getString(REQUEST_TOKEN_SECRET, ""));
+                consumer.setTokenWithSecret(requestToken, requestTokenSceret);
                 authProvider.retrieveAccessToken(consumer, null);
-                setAccessToken(preferences);
+                accessToken = consumer.getToken();
+                accessTokenSceret = consumer.getTokenSecret();
 
 
-                consumer.setTokenWithSecret(preferences.getString(ACCESS_TOKEN, ""), preferences.getString(ACCESS_TOKEN_SECRET, ""));
+                consumer.setTokenWithSecret(accessToken, accessTokenSceret);
 
                 HttpRequest request = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/%40me?alt=json"));
                 String requestUrl = request.getRequestUrl();
@@ -216,7 +220,7 @@ public class MainActivity extends ListActivity {
 
                     consumer = OAuthFactory.createConsumer();
 
-                    consumer.setTokenWithSecret(preferences.getString(ACCESS_TOKEN, ""), preferences.getString(ACCESS_TOKEN_SECRET, ""));
+                    consumer.setTokenWithSecret(accessToken, accessTokenSceret);
                     String userId = preferences.getString(USER_ID, "");
 
                     String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/"+ userId+"/collection?cat=book&alt=json")).getRequestUrl();
@@ -350,21 +354,6 @@ public class MainActivity extends ListActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
-    }
-
-    private void setRequestToken() {
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor edit = preferences.edit();
-        edit.putString(REQUEST_TOKEN, consumer.getToken());
-        edit.putString(REQUEST_TOKEN_SECRET, consumer.getTokenSecret());
-        edit.commit();
-    }
-
-    private void setAccessToken(SharedPreferences preferences) {
-        SharedPreferences.Editor edit = preferences.edit();
-        edit.putString(ACCESS_TOKEN, consumer.getToken());
-        edit.putString(ACCESS_TOKEN_SECRET, consumer.getTokenSecret());
-        edit.commit();
     }
 
 }
