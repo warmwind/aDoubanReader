@@ -3,8 +3,10 @@ package info.jiangpeng;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import info.jiangpeng.helper.task.SearchTask;
 import info.jiangpeng.model.Book;
 
 import java.util.ArrayList;
@@ -29,11 +31,32 @@ public class BookListScreen extends LinearLayout {
         this.addView(linearLayout);
     }
 
-    public void initComponent(MainActivity mainActivity, ListView listView) {
+    public void initComponent(MainActivity mainActivity) {
         bookArrayAdapter = new BookListAdapter(mainActivity, R.layout.book_item, R.id.book_title);
+        ListView listView = mainActivity.getListView();
         listView.setAdapter(bookArrayAdapter);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+// comment function for auto load when scroll down
+//                int lastInScreen = firstVisibleItem + visibleItemCount;
+//                if (lastInScreen == totalItemCount && canLoadMore) {
+//                    executeSearch();
+//                }
+            }
+        });
 
     }
+
+    public void executeSearch(String query) {
+        new SearchTask(this).execute(query);
+//        canLoadMore = false;
+    }
+
 
     public int getBookCount(){
         return bookArrayAdapter.getCount();
