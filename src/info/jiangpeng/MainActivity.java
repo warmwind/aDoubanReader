@@ -29,17 +29,15 @@ import org.json.JSONObject;
 
 public class MainActivity extends ListActivity {
 
-    private static String accessToken;
-    private static String accessTokenSceret;
+    public static String accessToken;
+    public static String accessTokenSceret;
     public static String requestToken;
     public static String requestTokenSceret;
 
 
     private String query;
-    private boolean canLoadMore;
 
     private DefaultOAuthProvider authProvider;
-    private TextView signIn;
     private BookListScreen bookListScreen;
     private SearchBar searchBar;
     private HeaderScreen headerScreen;
@@ -53,11 +51,10 @@ public class MainActivity extends ListActivity {
         authProvider = new DefaultOAuthProvider("http://www.douban.com/service/auth/request_token", "http://www.douban.com/service/auth/access_token", "http://www.douban.com/service/auth/authorize");
         headerScreen = (HeaderScreen) findViewById(R.id.header);
 
-        searchBar = (SearchBar)findViewById(R.id.search_bar);
+        searchBar = (SearchBar) findViewById(R.id.search_bar);
         bookListScreen = (BookListScreen) findViewById(R.id.book_list);
 
         initComponent();
-
 
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -137,26 +134,7 @@ public class MainActivity extends ListActivity {
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
-                try {
-                    bookListScreen.clear();
-
-                    DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-                    consumer.setTokenWithSecret(accessToken, accessTokenSceret);
-
-                    String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + headerScreen.getUserId() + "/collection?cat=book&alt=json")).getRequestUrl();
-                    String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
-
-
-                    JSONObject jsonObject = new JSONObject(s1);
-                    JSONArray entry = jsonObject.getJSONArray("entry");
-                    int length = entry.length();
-                    for (int i = 0; i < length; i++) {
-                        bookListScreen.add(new MyBookParser().parse(entry.getJSONObject(i)));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                bookListScreen.searchMyOwn(headerScreen.getUserId());
                 return true;
             default:
                 return false;

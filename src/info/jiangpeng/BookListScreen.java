@@ -6,8 +6,17 @@ import android.view.LayoutInflater;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import info.jiangpeng.helper.MyBookParser;
 import info.jiangpeng.helper.task.SearchTask;
 import info.jiangpeng.model.Book;
+import info.jiangpeng.sign.OAuthFactory;
+import oauth.signpost.basic.DefaultOAuthConsumer;
+import oauth.signpost.basic.UrlStringRequestAdapter;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -16,6 +25,7 @@ public class BookListScreen extends LinearLayout {
 
     private BookListAdapter bookArrayAdapter;
     private final ArrayList<DataChangeListener> listeners;
+    private MainActivity mainActivity;
 
     public BookListScreen(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,6 +42,7 @@ public class BookListScreen extends LinearLayout {
     }
 
     public void initComponent(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         bookArrayAdapter = new BookListAdapter(mainActivity, R.layout.book_item, R.id.book_title);
         ListView listView = mainActivity.getListView();
         listView.setAdapter(bookArrayAdapter);
@@ -66,10 +77,6 @@ public class BookListScreen extends LinearLayout {
         return bookArrayAdapter.getItem(position);
     }
 
-    public void clear() {
-        bookArrayAdapter.clear();
-    }
-
     public void add(Book book) {
         bookArrayAdapter.add(book);
         notifyListingViewAndProgressBar();
@@ -77,6 +84,30 @@ public class BookListScreen extends LinearLayout {
 
     public void addDataChangeListener(DataChangeListener listener) {
          listeners.add(listener);
+    }
+
+    public void searchMyOwn(String userId){
+        try {
+
+            bookArrayAdapter.clear();
+
+            DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+            consumer.setTokenWithSecret(mainActivity.accessToken, mainActivity.accessTokenSceret);
+
+            String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + userId + "/collection?cat=book&alt=json")).getRequestUrl();
+            String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
+
+
+            JSONObject jsonObject = new JSONObject(s1);
+            JSONArray entry = jsonObject.getJSONArray("entry");
+            int length = entry.length();
+            for (int i = 0; i < length; i++) {
+                add(new MyBookParser().parse(entry.getJSONObject(i)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void notifyListingViewAndProgressBar() {
