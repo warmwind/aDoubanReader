@@ -15,11 +15,11 @@ import info.jiangpeng.model.Book;
 import java.io.IOException;
 import java.net.URL;
 
-public class SearchResultAdapter extends ArrayAdapter<Book> {
+public class BookListAdapter extends ArrayAdapter<Book> {
 
     private int resource;
 
-    public SearchResultAdapter(Context context, int resource, int textViewResourceId) {
+    public BookListAdapter(Context context, int resource, int textViewResourceId) {
         super(context, resource, textViewResourceId);
         this.resource = resource;
     }
