@@ -25,7 +25,6 @@ public class BookListScreen extends LinearLayout {
 
     private BookListAdapter bookArrayAdapter;
     private final ArrayList<DataChangeListener> listeners;
-    private MainActivity mainActivity;
 
     public BookListScreen(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,7 +41,6 @@ public class BookListScreen extends LinearLayout {
     }
 
     public void initComponent(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
         bookArrayAdapter = new BookListAdapter(mainActivity, R.layout.book_item, R.id.book_title);
         ListView listView = mainActivity.getListView();
         listView.setAdapter(bookArrayAdapter);
@@ -86,13 +84,13 @@ public class BookListScreen extends LinearLayout {
          listeners.add(listener);
     }
 
-    public void searchMyOwn(String userId){
+    public void searchMyOwn(String userId, String accessToken, String accessTokenSecret){
         try {
 
             bookArrayAdapter.clear();
 
             DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-            consumer.setTokenWithSecret(mainActivity.accessToken, mainActivity.accessTokenSceret);
+            consumer.setTokenWithSecret(accessToken, accessTokenSecret);
 
             String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + userId + "/collection?cat=book&alt=json")).getRequestUrl();
             String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
@@ -107,7 +105,6 @@ public class BookListScreen extends LinearLayout {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void notifyListingViewAndProgressBar() {

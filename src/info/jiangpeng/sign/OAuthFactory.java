@@ -14,4 +14,11 @@ public class OAuthFactory {
     public static CustomOAuthConsumer createConsumer(String accessToken, String accessTokenSceret) {
         return new CustomOAuthConsumer(accessToken, accessTokenSceret);
     }
+
+    public static DefaultOAuthProvider createProvider(){
+        String requestTokenEndpointUrl = "http://www.douban.com/service/auth/request_token";
+        String accessTokenEndpointUrl = "http://www.douban.com/service/auth/access_token";
+        String authorizationWebsiteUrl = "http://www.douban.com/service/auth/authorize";
+        return new DefaultOAuthProvider(requestTokenEndpointUrl, accessTokenEndpointUrl, authorizationWebsiteUrl);
+    }
 }

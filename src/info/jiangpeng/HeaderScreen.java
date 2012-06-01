@@ -10,20 +10,31 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import info.jiangpeng.helper.UserParser;
 import info.jiangpeng.model.NullUser;
 import info.jiangpeng.model.User;
+import info.jiangpeng.sign.CustomOAuthConsumer;
 import info.jiangpeng.sign.OAuthFactory;
 import oauth.signpost.basic.DefaultOAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class HeaderScreen extends RelativeLayout{
+
+    public static String accessToken;
+    public static String accessTokenSecret;
+    private static String requestToken;
+    private static String requestTokenSecret;
+
     private static User user = new NullUser();
-    private TextView signIn;
+    private TextView signInText;
     private MainActivity mainActivity;
+
 
     public HeaderScreen(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,17 +52,17 @@ public class HeaderScreen extends RelativeLayout{
 
     public void initComponent(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        signIn = (TextView) findViewById(R.id.user);
-        signIn.setText(user.getName());
+        signInText = (TextView) findViewById(R.id.user);
+        signInText.setText(user.getName());
 
-        signIn.setOnTouchListener(new View.OnTouchListener() {
+        signInText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
                         if (user.isSignedIn()) {
                             user = new NullUser();
-                            signIn.setText(user.getName());
+                            signInText.setText(user.getName());
                         } else {
                             try {
                                 retrieveRequestToken();
@@ -67,22 +78,6 @@ public class HeaderScreen extends RelativeLayout{
         });
 
     }
-    private void retrieveRequestToken() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
-        DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-        DefaultOAuthProvider authProvider = new DefaultOAuthProvider("http://www.douban.com/service/auth/request_token", "http://www.douban.com/service/auth/access_token", "http://www.douban.com/service/auth/authorize");
-        String url1 = authProvider.retrieveRequestToken(consumer, "vtbapp-doudou:///");
-
-        mainActivity.requestToken = consumer.getToken();
-        mainActivity.requestTokenSceret = consumer.getTokenSecret();
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
-        mainActivity.startActivity(browserIntent);
-    }
-
-    public void updateUser(User newUser) {
-        user = newUser;
-        signIn.setText(user.getName());
-    }
-
     public boolean isUserSignedIn(){
         return user.isSignedIn();
     }
@@ -90,4 +85,37 @@ public class HeaderScreen extends RelativeLayout{
     public String getUserId(){
         return user.getId();
     }
+
+    public void updateUserInfo() throws OAuthExpectationFailedException, OAuthMessageSignerException, OAuthCommunicationException, OAuthNotAuthorizedException, IOException, JSONException {
+        User user = retrieveUserInfo();
+        HeaderScreen.user = user;
+        signInText.setText(HeaderScreen.user.getName());
+
+    }
+
+    private void retrieveRequestToken() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
+        DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+        String url = OAuthFactory.createProvider().retrieveRequestToken(consumer, "vtbapp-doudou:///");
+
+        requestToken = consumer.getToken();
+        requestTokenSecret = consumer.getTokenSecret();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        mainActivity.startActivity(browserIntent);
+    }
+
+    private User retrieveUserInfo() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException, JSONException, IOException {
+        DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+        retrieveAccessToken(consumer);
+
+        CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(consumer.getToken(), consumer.getTokenSecret());
+        return new UserParser().parse(consumerSignedIn.executeAfterSignIn("http://api.douban.com/people/%40me?alt=json"));
+    }
+
+    private void retrieveAccessToken(DefaultOAuthConsumer consumer) throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
+        consumer.setTokenWithSecret(requestToken, requestTokenSecret);
+        OAuthFactory.createProvider().retrieveAccessToken(consumer, null);
+        accessToken = consumer.getToken();
+        accessTokenSecret = consumer.getTokenSecret();
+    }
+
 }
