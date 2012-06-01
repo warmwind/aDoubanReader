@@ -6,17 +6,9 @@ import android.view.LayoutInflater;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import info.jiangpeng.helper.MyBookParser;
-import info.jiangpeng.helper.task.SearchTask;
+import info.jiangpeng.task.SearchMyBookTask;
+import info.jiangpeng.task.SearchTask;
 import info.jiangpeng.model.Book;
-import info.jiangpeng.sign.OAuthFactory;
-import oauth.signpost.basic.DefaultOAuthConsumer;
-import oauth.signpost.basic.UrlStringRequestAdapter;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -67,7 +59,7 @@ public class BookListScreen extends LinearLayout {
     }
 
 
-    public int getBookCount(){
+    public int getBookCount() {
         return bookArrayAdapter.getCount();
     }
 
@@ -81,30 +73,12 @@ public class BookListScreen extends LinearLayout {
     }
 
     public void addDataChangeListener(DataChangeListener listener) {
-         listeners.add(listener);
+        listeners.add(listener);
     }
 
-    public void searchMyOwn(String userId, String accessToken, String accessTokenSecret){
-        try {
-
-            bookArrayAdapter.clear();
-
-            DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-            consumer.setTokenWithSecret(accessToken, accessTokenSecret);
-
-            String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + userId + "/collection?cat=book&alt=json")).getRequestUrl();
-            String s1 = EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
-
-
-            JSONObject jsonObject = new JSONObject(s1);
-            JSONArray entry = jsonObject.getJSONArray("entry");
-            int length = entry.length();
-            for (int i = 0; i < length; i++) {
-                add(new MyBookParser().parse(entry.getJSONObject(i)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void searchMyOwn(String userId, String accessToken, String accessTokenSecret) {
+        bookArrayAdapter.clear();
+        new SearchMyBookTask(this).execute(userId, accessToken, accessTokenSecret);
     }
 
     private void notifyListingViewAndProgressBar() {
@@ -113,4 +87,5 @@ public class BookListScreen extends LinearLayout {
             listener.update();
         }
     }
+
 }

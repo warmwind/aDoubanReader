@@ -1,4 +1,4 @@
-package info.jiangpeng.helper.task;
+package info.jiangpeng.task;
 
 import android.net.Uri;
 import android.os.AsyncTask;

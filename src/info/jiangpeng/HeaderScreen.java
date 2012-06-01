@@ -32,6 +32,8 @@ public class HeaderScreen extends RelativeLayout{
     private static String requestTokenSecret;
 
     private static User user = new NullUser();
+    public static final String USER_INFO_URL = "http://api.douban.com/people/%40me?alt=json";
+    public static final String CALLBACK_URL = "vtbapp-doudou:///";
     private TextView signInText;
     private MainActivity mainActivity;
 
@@ -95,7 +97,7 @@ public class HeaderScreen extends RelativeLayout{
 
     private void retrieveRequestToken() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
         DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-        String url = OAuthFactory.createProvider().retrieveRequestToken(consumer, "vtbapp-doudou:///");
+        String url = OAuthFactory.createProvider().retrieveRequestToken(consumer, CALLBACK_URL);
 
         requestToken = consumer.getToken();
         requestTokenSecret = consumer.getTokenSecret();
@@ -108,7 +110,7 @@ public class HeaderScreen extends RelativeLayout{
         retrieveAccessToken(consumer);
 
         CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(consumer.getToken(), consumer.getTokenSecret());
-        return new UserParser().parse(consumerSignedIn.executeAfterSignIn("http://api.douban.com/people/%40me?alt=json"));
+        return new UserParser().parse(consumerSignedIn.executeAfterSignIn(USER_INFO_URL));
     }
 
     private void retrieveAccessToken(DefaultOAuthConsumer consumer) throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {

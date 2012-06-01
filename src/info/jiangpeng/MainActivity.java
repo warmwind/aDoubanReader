@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import info.jiangpeng.helper.task.SearchTask;
+import info.jiangpeng.task.SearchTask;
 import info.jiangpeng.model.Book;
 
 public class MainActivity extends ListActivity {
