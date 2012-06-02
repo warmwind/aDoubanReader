@@ -11,7 +11,7 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
     private ProgressBar progressBar;
     private int currentStatus;
     public static final int PROGRESS_BAR_MAX = 1000;
-    private MainActivity mainActivity;
+    private MainSearchActivity mainSearchActivity;
 
     public SearchBar(Context context) {
         super(context);
@@ -49,16 +49,16 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    public void initComponent(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public void initComponent(MainSearchActivity mainSearchActivity) {
+        this.mainSearchActivity = mainSearchActivity;
         initSearchBar();
     }
 
     private void initSearchBar() {
-        SearchManager searchManager = (SearchManager) mainActivity.getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) mainSearchActivity.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = (SearchView) findViewById(R.id.search);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(mainActivity.getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(mainSearchActivity.getComponentName()));
     }
 
 

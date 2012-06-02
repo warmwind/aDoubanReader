@@ -35,7 +35,7 @@ public class HeaderScreen extends RelativeLayout{
     public static final String USER_INFO_URL = "http://api.douban.com/people/%40me?alt=json";
     public static final String CALLBACK_URL = "vtbapp-doudou:///";
     private TextView signInText;
-    private MainActivity mainActivity;
+    private MainSearchActivity mainSearchActivity;
 
 
     public HeaderScreen(Context context, AttributeSet attrs) {
@@ -52,8 +52,8 @@ public class HeaderScreen extends RelativeLayout{
     }
 
 
-    public void initComponent(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public void initComponent(MainSearchActivity mainSearchActivity) {
+        this.mainSearchActivity = mainSearchActivity;
         signInText = (TextView) findViewById(R.id.user);
         signInText.setText(user.getName());
 
@@ -102,7 +102,7 @@ public class HeaderScreen extends RelativeLayout{
         requestToken = consumer.getToken();
         requestTokenSecret = consumer.getTokenSecret();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        mainActivity.startActivity(browserIntent);
+        mainSearchActivity.startActivity(browserIntent);
     }
 
     private User retrieveUserInfo() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException, JSONException, IOException {

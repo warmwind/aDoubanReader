@@ -32,9 +32,9 @@ public class BookListScreen extends LinearLayout {
         this.addView(linearLayout);
     }
 
-    public void initComponent(MainActivity mainActivity) {
-        bookArrayAdapter = new BookListAdapter(mainActivity, R.layout.book_item, R.id.book_title);
-        ListView listView = mainActivity.getListView();
+    public void initComponent(MainSearchActivity mainSearchActivity) {
+        bookArrayAdapter = new BookListAdapter(mainSearchActivity, R.layout.book_item, R.id.book_title);
+        ListView listView = mainSearchActivity.getListView();
         listView.setAdapter(bookArrayAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

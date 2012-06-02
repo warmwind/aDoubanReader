@@ -12,7 +12,7 @@ import android.widget.ListView;
 import info.jiangpeng.task.SearchTask;
 import info.jiangpeng.model.Book;
 
-public class MainActivity extends ListActivity {
+public class MainSearchActivity extends ListActivity {
 
     private String query;
     private BookListScreen bookListScreen;
