@@ -1,5 +1,6 @@
 package info.jiangpeng;
 
+import android.app.Fragment;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -15,9 +16,10 @@ import info.jiangpeng.model.Book;
 public class MainSearchActivity extends ListActivity {
 
     private String query;
-    private BookListScreen bookListScreen;
+//    private BookListFragment bookListScreen;
     private SearchBar searchBar;
     private HeaderScreen headerScreen;
+    private BookListFragment bookListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,9 @@ public class MainSearchActivity extends ListActivity {
 
         headerScreen = (HeaderScreen) findViewById(R.id.header);
         searchBar = (SearchBar) findViewById(R.id.search_bar);
-        bookListScreen = (BookListScreen) findViewById(R.id.book_list);
+//        bookListScreen = (BookListScreen) findViewById(R.id.book_list);
+//        bookListScreen = (BookListFragment) findViewById(R.id.book_list);
+        bookListFragment = (BookListFragment)getFragmentManager().findFragmentById(R.id.book_list);
 
         initComponent();
 
@@ -35,7 +39,7 @@ public class MainSearchActivity extends ListActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
 
-            new SearchTask(bookListScreen).execute(query);
+            new SearchTask(bookListFragment).execute(query);
             searchBar.showProgressBar();
         }
 
@@ -44,8 +48,9 @@ public class MainSearchActivity extends ListActivity {
     private void initComponent() {
         headerScreen.initComponent(this);
         searchBar.initComponent(this);
-        bookListScreen.initComponent(this);
-        bookListScreen.addDataChangeListener(searchBar);
+        bookListFragment.initComponent(this);
+//        bookListScreen.initComponent(this);
+        bookListFragment.addDataChangeListener(searchBar);
     }
 
     @Override
@@ -67,7 +72,7 @@ public class MainSearchActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Book book = bookListScreen.getBook(position);
+        Book book = bookListFragment.getBook(position);
         Intent myIntent = new Intent(this, BookDetailsWeb.class);
         myIntent.putExtra(BookDetailsWeb.BOOK_DETAILS_WEB_URL, book.getBookUrlInWeb());
 
@@ -92,11 +97,11 @@ public class MainSearchActivity extends ListActivity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_more:
-                bookListScreen.executeSearch(query);
+                bookListFragment.executeSearch(query);
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
-                bookListScreen.searchMyOwn(headerScreen.getUserId(), headerScreen.accessToken, headerScreen.accessTokenSecret);
+                bookListFragment.searchMyOwn(headerScreen.getUserId(), headerScreen.accessToken, headerScreen.accessTokenSecret);
                 return true;
             default:
                 return false;

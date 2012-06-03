@@ -1,35 +1,32 @@
 package info.jiangpeng;
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.app.ListFragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import info.jiangpeng.model.Book;
 import info.jiangpeng.task.SearchMyBookTask;
 import info.jiangpeng.task.SearchTask;
-import info.jiangpeng.model.Book;
 
 import java.util.ArrayList;
 
-
-public class BookListScreen extends LinearLayout {
-
+public class BookListFragment extends ListFragment{
     private BookListAdapter bookArrayAdapter;
-    private final ArrayList<DataChangeListener> listeners;
+    private ArrayList<DataChangeListener> listeners;
 
-    public BookListScreen(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initUI();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         listeners = new ArrayList<DataChangeListener>();
     }
 
-    private void initUI() {
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        vi.inflate(R.layout.book_list, linearLayout, true);
-
-        this.addView(linearLayout);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.book_list, container, false);
     }
 
     public void initComponent(MainSearchActivity mainSearchActivity) {
@@ -53,6 +50,10 @@ public class BookListScreen extends LinearLayout {
 
     }
 
+    public void addDataChangeListener(DataChangeListener listener) {
+        listeners.add(listener);
+    }
+
     public void executeSearch(String query) {
         new SearchTask(this).execute(query);
 //        canLoadMore = false;
@@ -72,9 +73,6 @@ public class BookListScreen extends LinearLayout {
         notifyListingViewAndProgressBar();
     }
 
-    public void addDataChangeListener(DataChangeListener listener) {
-        listeners.add(listener);
-    }
 
     public void searchMyOwn(String userId, String accessToken, String accessTokenSecret) {
         bookArrayAdapter.clear();
@@ -87,5 +85,7 @@ public class BookListScreen extends LinearLayout {
             listener.update();
         }
     }
+
+
 
 }

@@ -2,7 +2,7 @@ package info.jiangpeng.task;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import info.jiangpeng.BookListScreen;
+import info.jiangpeng.BookListFragment;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -12,10 +12,10 @@ import org.json.JSONObject;
 
 public class SearchTask extends AsyncTask<String, Integer, String> {
 
-    private BookListScreen bookListScreen;
+    private BookListFragment bookListFragment;
 
-    public SearchTask(BookListScreen bookListScreen) {
-        this.bookListScreen = bookListScreen;
+    public SearchTask(BookListFragment bookListFragment) {
+        this.bookListFragment = bookListFragment;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
                 appendQueryParameter("alt", "json").
                 appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
                 appendQueryParameter("max-results", "20").
-                appendQueryParameter("start-index", String.valueOf(bookListScreen.getBookCount())).
+                appendQueryParameter("start-index", String.valueOf(bookListFragment.getBookCount())).
                 appendQueryParameter("q", query).build();
 
         HttpGet request = new HttpGet(uri.toString());
@@ -52,7 +52,7 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
 
             int bookListSize = entryArray.length();
             for (int i = 0; i < bookListSize; i++) {
-                new BookParserTask(bookListScreen).execute(entryArray.getJSONObject(i));
+                new BookParserTask(bookListFragment).execute(entryArray.getJSONObject(i));
             }
         } catch (JSONException e) {
             e.printStackTrace();

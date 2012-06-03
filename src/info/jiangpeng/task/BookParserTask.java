@@ -1,18 +1,18 @@
 package info.jiangpeng.task;
 
 import android.os.AsyncTask;
-import info.jiangpeng.BookListScreen;
+import info.jiangpeng.BookListFragment;
 import info.jiangpeng.helper.CommonBookParser;
 import info.jiangpeng.model.Book;
 import org.json.JSONObject;
 
 public class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
 
-    private BookListScreen bookListScreen;
+    private BookListFragment bookListFragment;
 
-    public BookParserTask(BookListScreen bookListScreen) {
+    public BookParserTask(BookListFragment bookListFragment) {
 
-        this.bookListScreen = bookListScreen;
+        this.bookListFragment = bookListFragment;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
     @Override
     protected void onPostExecute(final Book book) {
         if (!book.isEmpty()) {
-            bookListScreen.add(book);
+            bookListFragment.add(book);
         }
     }
 }

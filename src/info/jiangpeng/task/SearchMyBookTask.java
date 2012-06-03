@@ -1,7 +1,7 @@
 package info.jiangpeng.task;
 
 import android.os.AsyncTask;
-import info.jiangpeng.BookListScreen;
+import info.jiangpeng.BookListFragment;
 import info.jiangpeng.helper.MyBookParser;
 import info.jiangpeng.sign.OAuthFactory;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -14,10 +14,10 @@ import org.json.JSONObject;
 
 public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
 
-    private BookListScreen bookListScreen;
+    private BookListFragment bookListFragment;
 
-    public SearchMyBookTask(BookListScreen bookListScreen) {
-        this.bookListScreen = bookListScreen;
+    public SearchMyBookTask(BookListFragment bookListFragment) {
+        this.bookListFragment = bookListFragment;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
             JSONArray entry = jsonObject.getJSONArray("entry");
             int length = entry.length();
             for (int i = 0; i < length; i++) {
-                bookListScreen.add(new MyBookParser().parse(entry.getJSONObject(i)));
+                bookListFragment.add(new MyBookParser().parse(entry.getJSONObject(i)));
             }
         } catch (Exception e) {
             e.printStackTrace();
