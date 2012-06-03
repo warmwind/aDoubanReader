@@ -19,6 +19,7 @@ public class MyBookActivity extends ListActivity {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(R.string.my_books);
 
         ActionBar.Tab wishTab = actionBar.newTab()
                 .setText(R.string.wish)
