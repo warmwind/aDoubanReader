@@ -1,6 +1,5 @@
 package info.jiangpeng;
 
-import android.app.Fragment;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import info.jiangpeng.task.SearchTask;
-import info.jiangpeng.model.Book;
 
 public class MainSearchActivity extends ListActivity {
 
@@ -85,7 +83,7 @@ public class MainSearchActivity extends ListActivity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_more:
-                bookListFragment.executeSearch(query);
+                bookListFragment.executeSearchByKeyWord(query);
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
@@ -95,7 +93,6 @@ public class MainSearchActivity extends ListActivity {
                 intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
 
                 startActivity(intent);
-//                bookListFragment.searchMyOwn(headerScreen.getUserId(), headerScreen.accessToken, headerScreen.accessTokenSecret);
                 return true;
             default:
                 return false;

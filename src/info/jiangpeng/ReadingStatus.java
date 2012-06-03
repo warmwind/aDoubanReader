@@ -1,6 +1,6 @@
 package info.jiangpeng;
 
-public enum BookStatus {
+public enum ReadingStatus {
     WISH,
     READING,
     READ

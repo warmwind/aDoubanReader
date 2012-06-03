@@ -25,16 +25,7 @@ public class BookListFragment extends ListFragment {
         bookArrayAdapter = new BookListAdapter(getActivity(), R.layout.book_item, R.id.book_title);
         setListAdapter(bookArrayAdapter);
 
-        Intent intent = getActivity().getIntent();
-        if (intent != null) {
-            String user_id = intent.getStringExtra("USER_ID");
-            String access_token = intent.getStringExtra("ACCESS_TOKEN");
-            String access_token_secret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
-            String tag = getTag();
-            if (tag != null) {
-                searchMyOwn(user_id, access_token, access_token_secret, tag.toLowerCase());
-            }
-        }
+        executeSearchByReadingStatus();
     }
 
     @Override
@@ -53,7 +44,6 @@ public class BookListFragment extends ListFragment {
         return inflater.inflate(R.layout.book_list, container, false);
     }
 
-
     public void initComponent(MainSearchActivity mainSearchActivity) {
         bookArrayAdapter = new BookListAdapter(mainSearchActivity, R.layout.book_item, R.id.book_title);
         ListView listView = mainSearchActivity.getListView();
@@ -65,7 +55,21 @@ public class BookListFragment extends ListFragment {
         listeners.add(listener);
     }
 
-    public void executeSearch(String query) {
+
+    private void executeSearchByReadingStatus() {
+        Intent intent = getActivity().getIntent();
+        if (intent != null) {
+            String user_id = intent.getStringExtra("USER_ID");
+            String access_token = intent.getStringExtra("ACCESS_TOKEN");
+            String access_token_secret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
+            String tag = getTag();
+            if (tag != null) {
+                searchMyOwn(user_id, access_token, access_token_secret, tag.toLowerCase());
+            }
+        }
+    }
+
+    public void executeSearchByKeyWord(String query) {
         new SearchTask(this).execute(query);
     }
 
@@ -74,13 +78,13 @@ public class BookListFragment extends ListFragment {
         return bookArrayAdapter.getCount();
     }
 
-    public Book getBook(int position) {
-        return bookArrayAdapter.getItem(position);
-    }
-
     public void add(Book book) {
         bookArrayAdapter.add(book);
         notifyListingViewAndProgressBar();
+    }
+
+    private Book getBook(int position) {
+        return bookArrayAdapter.getItem(position);
     }
 
 

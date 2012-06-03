@@ -1,7 +1,6 @@
 package info.jiangpeng;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,19 +22,19 @@ public class MyBookActivity extends ListActivity {
 
         ActionBar.Tab wishTab = actionBar.newTab()
                 .setText(R.string.wish)
-                .setTag(BookStatus.WISH)
+                .setTag(ReadingStatus.WISH)
                 .setTabListener(new MyBookTabListener(this, BookListFragment.class));
         actionBar.addTab(wishTab);
 
         ActionBar.Tab readingTab = actionBar.newTab()
                 .setText(R.string.reading)
-                .setTag(BookStatus.READING)
+                .setTag(ReadingStatus.READING)
                 .setTabListener(new MyBookTabListener(this, BookListFragment.class));
         actionBar.addTab(readingTab);
 
         ActionBar.Tab readTab = actionBar.newTab()
                 .setText(R.string.read)
-                .setTag(BookStatus.READ)
+                .setTag(ReadingStatus.READ)
                 .setTabListener(new MyBookTabListener(this, BookListFragment.class));
         actionBar.addTab(readTab);
     }
