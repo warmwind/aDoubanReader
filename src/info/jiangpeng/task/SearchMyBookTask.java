@@ -25,12 +25,13 @@ public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
         String userId = strings[0];
         String accessToken = strings[1];
         String accessTokenSecret = strings[2];
+        String status = strings[3];
 
         DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
         consumer.setTokenWithSecret(accessToken, accessTokenSecret);
 
         try {
-            String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + userId + "/collection?cat=book&alt=json")).getRequestUrl();
+            String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + userId + "/collection?cat=book&alt=json&status="+ status)).getRequestUrl();
             return EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
         } catch (Exception e) {
             e.printStackTrace();

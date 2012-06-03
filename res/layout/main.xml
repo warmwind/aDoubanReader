@@ -20,8 +20,8 @@
 
     <fragment
             class="info.jiangpeng.BookListFragment"
-            android:id="@+id/book_list"
-            android:layout_height="fill_parent"
+            android:id="@+id/main_book_list"
+            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
     />
 

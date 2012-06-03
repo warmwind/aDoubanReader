@@ -3,9 +3,11 @@ package info.jiangpeng;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-public class MyBookActivity extends Activity {
+public class MyBookActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,19 +20,33 @@ public class MyBookActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
 
-        ActionBar.Tab withTab = actionBar.newTab()
+        ActionBar.Tab wishTab = actionBar.newTab()
                 .setText(R.string.wish)
-                .setTabListener(new MyBookTabListener(this, "wish", BookListFragment.class));
-        actionBar.addTab(withTab);
+                .setTag(BookStatus.WISH)
+                .setTabListener(new MyBookTabListener(this, BookListFragment.class));
+        actionBar.addTab(wishTab);
 
         ActionBar.Tab readingTab = actionBar.newTab()
                 .setText(R.string.reading)
-                .setTabListener(new MyBookTabListener(this, "reading", BookListFragment.class));
+                .setTag(BookStatus.READING)
+                .setTabListener(new MyBookTabListener(this, BookListFragment.class));
         actionBar.addTab(readingTab);
 
         ActionBar.Tab readTab = actionBar.newTab()
                 .setText(R.string.read)
-                .setTabListener(new MyBookTabListener(this, "read", BookListFragment.class));
+                .setTag(BookStatus.READ)
+                .setTabListener(new MyBookTabListener(this, BookListFragment.class));
         actionBar.addTab(readTab);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent intent = new Intent(this, MainSearchActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return true;
     }
 }

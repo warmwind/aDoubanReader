@@ -1,6 +1,9 @@
 package info.jiangpeng;
 
+import android.app.Fragment;
+import android.app.ListActivity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +16,35 @@ import info.jiangpeng.task.SearchTask;
 
 import java.util.ArrayList;
 
-public class BookListFragment extends ListFragment{
+public class BookListFragment extends ListFragment {
     private BookListAdapter bookArrayAdapter;
     private ArrayList<DataChangeListener> listeners;
+    private String user_id;
+    private String access_token;
+    private String access_token_secret;
+    private String tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         listeners = new ArrayList<DataChangeListener>();
+        Intent intent = getActivity().getIntent();
+        if (intent != null) {
+            user_id = intent.getStringExtra("USER_ID");
+            access_token = intent.getStringExtra("ACCESS_TOKEN");
+            access_token_secret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
+            tag = getTag();
+            if (user_id != null && bookArrayAdapter == null) {
+                bookArrayAdapter = new BookListAdapter(getActivity(), R.layout.book_item, R.id.book_title);
+                ((ListActivity)getActivity()).getListView().setAdapter(bookArrayAdapter);
+            }
+            if(tag == null){
+                return;
+            }
+            searchMyOwn(user_id, access_token, access_token_secret, tag.toLowerCase());
+        }
+
     }
 
     @Override
@@ -29,6 +53,20 @@ public class BookListFragment extends ListFragment{
         return inflater.inflate(R.layout.book_list, container, false);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (user_id != null) {
+            bookArrayAdapter = new BookListAdapter(getActivity(), R.layout.book_item, R.id.book_title);
+            ((ListActivity)getActivity()).getListView().setAdapter(bookArrayAdapter);
+
+        }
+        if(tag == null){
+            return;
+        }
+        System.out.println("------------bookArrayAdapter = " + bookArrayAdapter);
+        searchMyOwn(user_id, access_token, access_token_secret, tag.toLowerCase());
+    }
 
     public void initComponent(MainSearchActivity mainSearchActivity) {
         bookArrayAdapter = new BookListAdapter(mainSearchActivity, R.layout.book_item, R.id.book_title);
@@ -50,6 +88,7 @@ public class BookListFragment extends ListFragment{
         });
 
     }
+
 
     public void addDataChangeListener(DataChangeListener listener) {
         listeners.add(listener);
@@ -75,9 +114,10 @@ public class BookListFragment extends ListFragment{
     }
 
 
-    public void searchMyOwn(String userId, String accessToken, String accessTokenSecret) {
+    public void searchMyOwn(String userId, String accessToken, String accessTokenSecret, String tag) {
         bookArrayAdapter.clear();
-        new SearchMyBookTask(this).execute(userId, accessToken, accessTokenSecret);
+        bookArrayAdapter.notifyDataSetChanged();
+        new SearchMyBookTask(this).execute(userId, accessToken, accessTokenSecret, tag);
     }
 
     private void notifyListingViewAndProgressBar() {
@@ -86,7 +126,6 @@ public class BookListFragment extends ListFragment{
             listener.update();
         }
     }
-
 
 
 }

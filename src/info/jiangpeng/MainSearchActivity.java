@@ -28,7 +28,7 @@ public class MainSearchActivity extends ListActivity {
 
         headerScreen = (HeaderScreen) findViewById(R.id.header);
         searchBar = (SearchBar) findViewById(R.id.search_bar);
-        bookListFragment = (BookListFragment)getFragmentManager().findFragmentById(R.id.book_list);
+        bookListFragment = (BookListFragment)getFragmentManager().findFragmentById(R.id.main_book_list);
 
         initComponent();
 
