@@ -29,6 +29,7 @@ public class BookListFragment extends ListFragment{
         return inflater.inflate(R.layout.book_list, container, false);
     }
 
+
     public void initComponent(MainSearchActivity mainSearchActivity) {
         bookArrayAdapter = new BookListAdapter(mainSearchActivity, R.layout.book_item, R.id.book_title);
         ListView listView = mainSearchActivity.getListView();

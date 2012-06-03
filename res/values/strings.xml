@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">豆瓣读书</string>
-    <string name="search_hint">key words of book</string>
+    <string name="search_hint">输入关键字搜索</string>
     <string name="search_url">http://api.douban.com/book/subjects</string>
-    <string name="load_more">More</string>
-    <string name="sign_in">Sign In</string>
-    <string name="my_books">My Books</string>
+    <string name="load_more">更多</string>
+    <string name="sign_in">登陆</string>
+    <string name="my_books">我的书单</string>
+    <string name="wish">想读</string>
+    <string name="reading">在读</string>
+    <string name="read">已读</string>
 
 </resources>

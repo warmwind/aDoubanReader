@@ -16,7 +16,6 @@ import info.jiangpeng.model.Book;
 public class MainSearchActivity extends ListActivity {
 
     private String query;
-//    private BookListFragment bookListScreen;
     private SearchBar searchBar;
     private HeaderScreen headerScreen;
     private BookListFragment bookListFragment;
@@ -29,8 +28,6 @@ public class MainSearchActivity extends ListActivity {
 
         headerScreen = (HeaderScreen) findViewById(R.id.header);
         searchBar = (SearchBar) findViewById(R.id.search_bar);
-//        bookListScreen = (BookListScreen) findViewById(R.id.book_list);
-//        bookListScreen = (BookListFragment) findViewById(R.id.book_list);
         bookListFragment = (BookListFragment)getFragmentManager().findFragmentById(R.id.book_list);
 
         initComponent();
@@ -49,7 +46,6 @@ public class MainSearchActivity extends ListActivity {
         headerScreen.initComponent(this);
         searchBar.initComponent(this);
         bookListFragment.initComponent(this);
-//        bookListScreen.initComponent(this);
         bookListFragment.addDataChangeListener(searchBar);
     }
 
@@ -65,9 +61,6 @@ public class MainSearchActivity extends ListActivity {
             e.printStackTrace();
         }
     }
-
-
-
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -101,7 +94,13 @@ public class MainSearchActivity extends ListActivity {
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
-                bookListFragment.searchMyOwn(headerScreen.getUserId(), headerScreen.accessToken, headerScreen.accessTokenSecret);
+                Intent intent = new Intent(this, MyBookActivity.class);
+                intent.putExtra("USER_ID", headerScreen.getUserId());
+                intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
+                intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
+
+                startActivity(intent);
+//                bookListFragment.searchMyOwn(headerScreen.getUserId(), headerScreen.accessToken, headerScreen.accessTokenSecret);
                 return true;
             default:
                 return false;
