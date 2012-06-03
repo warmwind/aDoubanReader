@@ -64,12 +64,7 @@ public class MainSearchActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Book book = bookListFragment.getBook(position);
-        Intent myIntent = new Intent(this, BookDetailsWeb.class);
-        myIntent.putExtra(BookDetailsWeb.BOOK_DETAILS_WEB_URL, book.getBookUrlInWeb());
-
-        startActivity(myIntent);
+        bookListFragment.onListItemClick(l,v,position,id);
     }
 
     @Override
