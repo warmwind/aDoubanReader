@@ -23,20 +23,30 @@ public class MyBookActivity extends ListActivity {
         ActionBar.Tab wishTab = actionBar.newTab()
                 .setText(R.string.wish)
                 .setTag(ReadingStatus.WISH)
-                .setTabListener(new MyBookTabListener(this, BookListFragment.class));
+                .setTabListener(new MyBookTabListener(this, ReadingStatus.WISH.toString(), BookListFragment.class));
         actionBar.addTab(wishTab);
 
         ActionBar.Tab readingTab = actionBar.newTab()
                 .setText(R.string.reading)
                 .setTag(ReadingStatus.READING)
-                .setTabListener(new MyBookTabListener(this, BookListFragment.class));
+                .setTabListener(new MyBookTabListener(this, ReadingStatus.READING.toString(), BookListFragment.class));
         actionBar.addTab(readingTab);
 
         ActionBar.Tab readTab = actionBar.newTab()
                 .setText(R.string.read)
                 .setTag(ReadingStatus.READ)
-                .setTabListener(new MyBookTabListener(this, BookListFragment.class));
+                .setTabListener(new MyBookTabListener(this, ReadingStatus.READ.toString(), BookListFragment.class));
         actionBar.addTab(readTab);
+
+        if (savedInstanceState != null) {
+            actionBar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
     }
 
     @Override

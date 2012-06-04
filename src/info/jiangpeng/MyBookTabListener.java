@@ -11,22 +11,22 @@ public class MyBookTabListener<T extends Fragment> implements ActionBar.TabListe
     private final Class<T> clazz;
     private Fragment fragment;
 
-    public MyBookTabListener(Activity activity, Class clazz) {
+    public MyBookTabListener(Activity activity, String tag, Class clazz) {
         this.activity = activity;
 
         this.clazz = clazz;
+
+        //if remove this method call, when device orientation change, it will attach again.
+        detachFragmentIfAttached(activity, tag);
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // Check if the fragment is already initialized
         System.out.println("-------selected");
         if (fragment == null) {
-            // If not, instantiate and add it to the activity
             fragment = Fragment.instantiate(activity, clazz.getName());
             fragmentTransaction.add(android.R.id.content, fragment, tab.getTag().toString());
         } else {
-            // If it exists, simply attach it in order to show it
             fragmentTransaction.attach(fragment);
         }
 
@@ -35,6 +35,7 @@ public class MyBookTabListener<T extends Fragment> implements ActionBar.TabListe
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         if (fragment != null) {
+            System.out.println("----------unselect");
             fragmentTransaction.detach(fragment);
         }
     }
@@ -43,6 +44,15 @@ public class MyBookTabListener<T extends Fragment> implements ActionBar.TabListe
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         if (fragment != null) {
             fragmentTransaction.attach(fragment);
+        }
+    }
+
+    private void detachFragmentIfAttached(Activity activity, String tag) {
+        fragment = activity.getFragmentManager().findFragmentByTag(tag);
+        if (fragment != null && !fragment.isDetached()) {
+            FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+            ft.detach(fragment);
+            ft.commit();
         }
     }
 }
