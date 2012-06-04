@@ -2,23 +2,25 @@ package info.jiangpeng.task;
 
 import android.os.AsyncTask;
 import info.jiangpeng.BookListFragment;
-import info.jiangpeng.helper.CommonBookParser;
+import info.jiangpeng.helper.BookParser;
 import info.jiangpeng.model.Book;
 import org.json.JSONObject;
 
 public class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
 
     private BookListFragment bookListFragment;
+    private BookParser bookParser;
 
-    public BookParserTask(BookListFragment bookListFragment) {
+    public BookParserTask(BookListFragment bookListFragment, BookParser bookParser) {
 
         this.bookListFragment = bookListFragment;
+        this.bookParser = bookParser;
     }
 
     @Override
     protected Book doInBackground(JSONObject... jsonObjects) {
         try {
-            return new CommonBookParser().parse(jsonObjects[0]);
+            return bookParser.parse(jsonObjects[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }

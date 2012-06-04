@@ -7,8 +7,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class MyBookParser extends BookParser{
+public class MyBookParser extends AbstractBookParser implements BookParser{
 
+    @Override
     public Book parse(JSONObject jsonBookObject) throws JSONException, IOException {
         Book book = new Book();
         JSONObject jsonBook = jsonBookObject.getJSONObject("db:subject");
