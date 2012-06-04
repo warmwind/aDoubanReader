@@ -15,7 +15,6 @@ public class CommonBookParser extends BookParser{
         book.setTitle(jsonBookObject.getJSONObject("title").getString("$t"));
         parseLinkJson(jsonBookObject, book);
 
-        book.setAuthor(jsonBookObject.getJSONArray("author").getJSONObject(0).getJSONObject("name").getString("$t"));
         book.setAverageRate(jsonBookObject.getJSONObject("gd:rating").getString("@average"));
 
         parseMetadataJson(jsonBookObject, book);
@@ -24,15 +23,4 @@ public class CommonBookParser extends BookParser{
 
     }
 
-    private void parseMetadataJson(JSONObject rawJsonString, Book book) throws JSONException {
-        JSONArray metadataArray = rawJsonString.getJSONArray("db:attribute");
-        for (int i = 0; i < metadataArray.length(); i++) {
-            JSONObject metaJson = metadataArray.getJSONObject(i);
-            if (metaJson.getString("@name").equals("publisher")) {
-                book.setPublisher(metaJson.getString("$t"));
-            } else if (metaJson.getString("@name").equals("pubdate")) {
-                book.setPubDate(metaJson.getString("$t"));
-            }
-        }
-    }
 }
