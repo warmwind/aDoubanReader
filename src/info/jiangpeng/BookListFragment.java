@@ -10,6 +10,7 @@ import android.widget.ListView;
 import info.jiangpeng.activity.MainSearchActivity;
 import info.jiangpeng.adapter.BookListAdapter;
 import info.jiangpeng.model.Book;
+import info.jiangpeng.model.RequestParams;
 import info.jiangpeng.task.SearchMyBookTask;
 import info.jiangpeng.task.SearchTask;
 
@@ -61,12 +62,10 @@ public class BookListFragment extends ListFragment {
     private void executeSearchByReadingStatus() {
         Intent intent = getActivity().getIntent();
         if (intent != null) {
-            String user_id = intent.getStringExtra("USER_ID");
-            String access_token = intent.getStringExtra("ACCESS_TOKEN");
-            String access_token_secret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
+            RequestParams params = new RequestParams(intent);
             String tag = getTag();
             if (tag != null) {
-                searchMyOwn(user_id, access_token, access_token_secret, tag.toLowerCase());
+                searchMyOwn(params, tag.toLowerCase());
             }
         }
     }
@@ -90,9 +89,9 @@ public class BookListFragment extends ListFragment {
     }
 
 
-    private void searchMyOwn(String userId, String accessToken, String accessTokenSecret, String tag) {
+    private void searchMyOwn(RequestParams params, String tag) {
         bookArrayAdapter.clear();
-        new SearchMyBookTask(this).execute(userId, accessToken, accessTokenSecret, tag);
+        new SearchMyBookTask(this).execute(params.getUserId(), params.getAccessToken(), params.getAccessTokenSecret(), tag);
     }
 
     private void notifyListingViewAndProgressBar() {

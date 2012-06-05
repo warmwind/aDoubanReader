@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import info.jiangpeng.*;
+import info.jiangpeng.model.RequestParams;
 import info.jiangpeng.task.SearchTask;
 
 public class MainSearchActivity extends ListActivity {
@@ -28,7 +29,7 @@ public class MainSearchActivity extends ListActivity {
 
         headerScreen = (HeaderScreen) findViewById(R.id.header);
         searchBar = (SearchBar) findViewById(R.id.search_bar);
-        bookListFragment = (BookListFragment)getFragmentManager().findFragmentById(R.id.main_book_list);
+        bookListFragment = (BookListFragment) getFragmentManager().findFragmentById(R.id.main_book_list);
 
 //        contactsGridView = (GridView)findViewById(R.id.my_contact_grid);
 //        contactsGridView.setAdapter(new ContactsAdapter(this));
@@ -68,7 +69,7 @@ public class MainSearchActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        bookListFragment.onListItemClick(l,v,position,id);
+        bookListFragment.onListItemClick(l, v, position, id);
     }
 
     @Override
@@ -95,27 +96,23 @@ public class MainSearchActivity extends ListActivity {
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
-                intent = new Intent(this, UserBooksActivity.class);
-                intent.putExtra("USER_ID", headerScreen.getUserId());
-                intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
-                intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
-
-                startActivity(intent);
+                startActivityWithRequestParams(UserBooksActivity.class);
                 return true;
             case R.id.menu_contacts:
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.hide(bookListFragment);
-                intent = new Intent(this, ContactsActivity.class);
-                intent.putExtra("USER_ID", headerScreen.getUserId());
-                intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
-                intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
-
-                startActivity(intent);
-
-
+                startActivityWithRequestParams(ContactsActivity.class);
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void startActivityWithRequestParams(Class activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        RequestParams params = new RequestParams();
+        params.setUserId(headerScreen.getUserId());
+        params.setAccessToken(headerScreen.accessToken);
+        params.setAccessTokenSecret(headerScreen.accessTokenSecret);
+        intent.putExtra("REQUEST_PARAMS", params);
+        startActivity(intent);
     }
 }
