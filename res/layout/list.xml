@@ -7,7 +7,7 @@
     <ListView android:id="@android:id/list"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:divider="@color/book_item_divider"
+              android:divider="@color/list_item_divider"
               android:dividerHeight="2dp"
             />
 

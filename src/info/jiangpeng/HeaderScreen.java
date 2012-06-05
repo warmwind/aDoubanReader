@@ -1,5 +1,6 @@
 package info.jiangpeng;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,7 +36,7 @@ public class HeaderScreen extends RelativeLayout{
     public static final String USER_INFO_URL = "http://api.douban.com/people/%40me?alt=json";
     public static final String CALLBACK_URL = "vtbapp-doudou:///";
     private TextView signInText;
-    private MainSearchActivity mainSearchActivity;
+    private Activity activity;
 
 
     public HeaderScreen(Context context, AttributeSet attrs) {
@@ -52,8 +53,8 @@ public class HeaderScreen extends RelativeLayout{
     }
 
 
-    public void initComponent(MainSearchActivity mainSearchActivity) {
-        this.mainSearchActivity = mainSearchActivity;
+    public void initComponent(Activity activity) {
+        this.activity = activity;
         signInText = (TextView) findViewById(R.id.user);
         signInText.setText(user.getName());
 
@@ -102,7 +103,7 @@ public class HeaderScreen extends RelativeLayout{
         requestToken = consumer.getToken();
         requestTokenSecret = consumer.getTokenSecret();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        mainSearchActivity.startActivity(browserIntent);
+        activity.startActivity(browserIntent);
     }
 
     private User retrieveUserInfo() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException, JSONException, IOException {

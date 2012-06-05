@@ -18,6 +18,7 @@ public class MainSearchActivity extends ListActivity {
     private HeaderScreen headerScreen;
     private BookListFragment bookListFragment;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +28,10 @@ public class MainSearchActivity extends ListActivity {
         headerScreen = (HeaderScreen) findViewById(R.id.header);
         searchBar = (SearchBar) findViewById(R.id.search_bar);
         bookListFragment = (BookListFragment)getFragmentManager().findFragmentById(R.id.main_book_list);
+
+//        contactsGridView = (GridView)findViewById(R.id.my_contact_grid);
+//        contactsGridView.setAdapter(new ContactsAdapter(this));
+
 
         initComponent();
 
@@ -76,23 +81,37 @@ public class MainSearchActivity extends ListActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_my_books).setVisible(headerScreen.isUserSignedIn());
+        menu.findItem(R.id.menu_my_contacts).setVisible(headerScreen.isUserSignedIn());
         return true;
     }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_more:
                 bookListFragment.executeSearchByKeyWord(query);
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
-                Intent intent = new Intent(this, MyBookActivity.class);
+                intent = new Intent(this, MyBooksActivity.class);
                 intent.putExtra("USER_ID", headerScreen.getUserId());
                 intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
                 intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
 
                 startActivity(intent);
+                return true;
+            case R.id.menu_my_contacts:
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                ft.hide(bookListFragment);
+                intent = new Intent(this, MyContactsActivity.class);
+                intent.putExtra("USER_ID", headerScreen.getUserId());
+                intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
+                intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
+
+                startActivity(intent);
+
+
                 return true;
             default:
                 return false;

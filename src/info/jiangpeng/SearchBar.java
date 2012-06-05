@@ -1,5 +1,6 @@
 package info.jiangpeng;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,7 +12,7 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
     private ProgressBar progressBar;
     private int currentStatus;
     public static final int PROGRESS_BAR_MAX = 1000;
-    private MainSearchActivity mainSearchActivity;
+    private Activity activity;
 
     public SearchBar(Context context) {
         super(context);
@@ -49,16 +50,16 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    public void initComponent(MainSearchActivity mainSearchActivity) {
-        this.mainSearchActivity = mainSearchActivity;
+    public void initComponent(Activity activity) {
+        this.activity = activity;
         initSearchBar();
     }
 
     private void initSearchBar() {
-        SearchManager searchManager = (SearchManager) mainSearchActivity.getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = (SearchView) findViewById(R.id.search);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(mainSearchActivity.getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
     }
 
 

@@ -9,4 +9,8 @@
           android:icon="@drawable/my_books"
           android:title="@string/my_books"
           />
+    <item android:id="@+id/menu_my_contacts"
+          android:icon="@drawable/contacts"
+          android:title="@string/my_contacts"
+          />
 </menu>

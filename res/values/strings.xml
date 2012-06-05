@@ -9,5 +9,6 @@
     <string name="wish">想读</string>
     <string name="reading">在读</string>
     <string name="read">已读</string>
+    <string name="my_contacts">我关注的人</string>
 
 </resources>

@@ -41,7 +41,7 @@ public class BookListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.book_list, container, false);
+        return inflater.inflate(R.layout.list, container, false);
     }
 
     public void initComponent(MainSearchActivity mainSearchActivity) {
