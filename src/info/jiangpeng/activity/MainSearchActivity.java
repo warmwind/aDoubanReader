@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import info.jiangpeng.*;
-import info.jiangpeng.model.RequestParams;
+import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.task.SearchTask;
 
 public class MainSearchActivity extends ListActivity {
@@ -30,10 +30,6 @@ public class MainSearchActivity extends ListActivity {
         headerScreen = (HeaderScreen) findViewById(R.id.header);
         searchBar = (SearchBar) findViewById(R.id.search_bar);
         bookListFragment = (BookListFragment) getFragmentManager().findFragmentById(R.id.main_book_list);
-
-//        contactsGridView = (GridView)findViewById(R.id.my_contact_grid);
-//        contactsGridView.setAdapter(new ContactsAdapter(this));
-
 
         initComponent();
 
@@ -89,7 +85,6 @@ public class MainSearchActivity extends ListActivity {
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_more:
                 bookListFragment.executeSearchByKeyWord(query);

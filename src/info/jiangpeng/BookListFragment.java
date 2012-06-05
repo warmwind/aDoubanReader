@@ -10,7 +10,7 @@ import android.widget.ListView;
 import info.jiangpeng.activity.MainSearchActivity;
 import info.jiangpeng.adapter.BookListAdapter;
 import info.jiangpeng.model.Book;
-import info.jiangpeng.model.RequestParams;
+import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.task.SearchMyBookTask;
 import info.jiangpeng.task.SearchTask;
 

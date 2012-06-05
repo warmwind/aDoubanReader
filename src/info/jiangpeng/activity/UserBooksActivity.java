@@ -9,9 +9,7 @@ import info.jiangpeng.BookListFragment;
 import info.jiangpeng.UserBookTabListener;
 import info.jiangpeng.R;
 import info.jiangpeng.ReadingStatus;
-import info.jiangpeng.model.RequestParams;
-
-import java.io.Serializable;
+import info.jiangpeng.helper.RequestParams;
 
 public class UserBooksActivity extends ListActivity {
 
@@ -21,10 +19,13 @@ public class UserBooksActivity extends ListActivity {
 
         setContentView(R.layout.user_book_list);
         Intent intent = getIntent();
-        String userName = getString(R.string.me);
         RequestParams requestParams = (RequestParams)intent.getSerializableExtra("REQUEST_PARAMS");
+        String userName = null;
         if (requestParams != null){
-         userName = requestParams.getUserName();
+            userName = requestParams.getUserName();
+        }
+        if (userName == null){
+            userName = getString(R.string.me);
         }
         ActionBar actionBar = createTabs(userName);
 
@@ -58,6 +59,8 @@ public class UserBooksActivity extends ListActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(userName + "的书单");
+
+        actionBar.setIcon(R.drawable.douban);
 
         actionBar.addTab(createTab(actionBar, R.string.wish, ReadingStatus.WISH));
         actionBar.addTab(createTab(actionBar, R.string.reading, ReadingStatus.READING));

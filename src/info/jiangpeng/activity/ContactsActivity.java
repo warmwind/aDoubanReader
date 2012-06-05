@@ -9,7 +9,7 @@ import android.widget.GridView;
 import info.jiangpeng.adapter.ContactsAdapter;
 import info.jiangpeng.HeaderScreen;
 import info.jiangpeng.R;
-import info.jiangpeng.model.RequestParams;
+import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.sign.CustomOAuthConsumer;
 import info.jiangpeng.sign.OAuthFactory;
 import info.jiangpeng.task.UserParseTask;
@@ -32,7 +32,7 @@ public class ContactsActivity extends Activity {
         final RequestParams requestParams = new RequestParams(intent);
 
         headerScreen = (HeaderScreen) findViewById(R.id.header);
-        contactsGridView = (GridView)findViewById(R.id.contact_grid);
+        contactsGridView = (GridView) findViewById(R.id.contact_grid);
         contactsAdapter = new ContactsAdapter(this);
         contactsGridView.setAdapter(contactsAdapter);
 
@@ -40,10 +40,12 @@ public class ContactsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), UserBooksActivity.class);
-
-                requestParams.setUserId(String.valueOf(id));
-                requestParams.setUserName(contactsAdapter.getItem(position).getName());
-                intent.putExtra("REQUEST_PARAMS", requestParams);
+                RequestParams params = new RequestParams(intent);
+                params.setUserId(String.valueOf(id));
+                params.setUserName(contactsAdapter.getItem(position).getName());
+                params.setAccessToken(requestParams.getAccessToken());
+                params.setAccessTokenSecret(requestParams.getAccessTokenSecret());
+                intent.putExtra("REQUEST_PARAMS", params);
                 startActivity(intent);
             }
         });
