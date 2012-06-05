@@ -3,6 +3,8 @@ package info.jiangpeng.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import info.jiangpeng.adapter.ContactsAdapter;
 import info.jiangpeng.HeaderScreen;
@@ -13,7 +15,7 @@ import info.jiangpeng.task.UserParseTask;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MyContactsActivity extends Activity {
+public class ContactsActivity extends Activity {
     private HeaderScreen headerScreen;
     private GridView contactsGridView;
     private ContactsAdapter contactsAdapter;
@@ -23,22 +25,35 @@ public class MyContactsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.my_contacts);
+        setContentView(R.layout.contacts);
+        Intent intent = getIntent();
+        final String access_token = intent.getStringExtra("ACCESS_TOKEN");
+        final String access_token_secret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
 
         headerScreen = (HeaderScreen) findViewById(R.id.header);
-        contactsGridView = (GridView)findViewById(R.id.my_contact_grid);
+        contactsGridView = (GridView)findViewById(R.id.contact_grid);
         contactsAdapter = new ContactsAdapter(this);
         contactsGridView.setAdapter(contactsAdapter);
 
-        Intent intent = getIntent();
+        contactsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), UserBooksActivity.class);
+                intent.putExtra("USER_NAME", contactsAdapter.getItem(position).getName());
+                intent.putExtra("USER_ID", String.valueOf(id));
+                intent.putExtra("ACCESS_TOKEN", access_token);
+                intent.putExtra("ACCESS_TOKEN_SECRET", access_token_secret);
+                startActivity(intent);
+            }
+        });
+
+
+
         String user_id = intent.getStringExtra("USER_ID");
-        String access_token = intent.getStringExtra("ACCESS_TOKEN");
-        String access_token_secret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
 
         CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(access_token, access_token_secret);
         try {
             String rawJsonString = consumerSignedIn.executeAfterSignIn("http://api.douban.com/people/" + user_id + "/contacts?alt=json");
-            System.out.println("------------rawJsonString = " + rawJsonString);
             JSONObject jsonObject = new JSONObject(rawJsonString);
             JSONArray entry = jsonObject.getJSONArray("entry");
             int length = entry.length();
@@ -48,14 +63,11 @@ public class MyContactsActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         initComponent();
-
-
     }
 
     private void initComponent() {
         headerScreen.initComponent(this);
     }
+
 }

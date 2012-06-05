@@ -82,7 +82,7 @@ public class MainSearchActivity extends ListActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_my_books).setVisible(headerScreen.isUserSignedIn());
-        menu.findItem(R.id.menu_my_contacts).setVisible(headerScreen.isUserSignedIn());
+        menu.findItem(R.id.menu_contacts).setVisible(headerScreen.isUserSignedIn());
         return true;
     }
 
@@ -95,17 +95,17 @@ public class MainSearchActivity extends ListActivity {
                 searchBar.showProgressBar();
                 return true;
             case R.id.menu_my_books:
-                intent = new Intent(this, MyBooksActivity.class);
+                intent = new Intent(this, UserBooksActivity.class);
                 intent.putExtra("USER_ID", headerScreen.getUserId());
                 intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
                 intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);
 
                 startActivity(intent);
                 return true;
-            case R.id.menu_my_contacts:
+            case R.id.menu_contacts:
 //                FragmentTransaction ft = getFragmentManager().beginTransaction();
 //                ft.hide(bookListFragment);
-                intent = new Intent(this, MyContactsActivity.class);
+                intent = new Intent(this, ContactsActivity.class);
                 intent.putExtra("USER_ID", headerScreen.getUserId());
                 intent.putExtra("ACCESS_TOKEN", headerScreen.accessToken);
                 intent.putExtra("ACCESS_TOKEN_SECRET", headerScreen.accessTokenSecret);

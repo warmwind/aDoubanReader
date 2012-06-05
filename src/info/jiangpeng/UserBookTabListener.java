@@ -5,13 +5,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-public class MyBookTabListener<T extends Fragment> implements ActionBar.TabListener {
+public class UserBookTabListener<T extends Fragment> implements ActionBar.TabListener {
 
     private final Activity activity;
     private final Class<T> clazz;
     private Fragment fragment;
 
-    public MyBookTabListener(Activity activity, String tag, Class clazz) {
+    public UserBookTabListener(Activity activity, String tag, Class clazz) {
         this.activity = activity;
 
         this.clazz = clazz;

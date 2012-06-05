@@ -15,7 +15,7 @@
             android:src="@color/list_item_divider"/>
 
     <GridView
-              android:id="@+id/my_contact_grid"
+              android:id="@+id/contact_grid"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:columnWidth="90dp"

@@ -5,10 +5,11 @@
     <string name="search_url">http://api.douban.com/book/subjects</string>
     <string name="load_more">更多</string>
     <string name="sign_in">登陆</string>
+    <string name="me">我</string>
     <string name="my_books">我的书单</string>
     <string name="wish">想读</string>
     <string name="reading">在读</string>
     <string name="read">已读</string>
-    <string name="my_contacts">我关注的人</string>
+    <string name="contacts">我关注的人</string>
 
 </resources>

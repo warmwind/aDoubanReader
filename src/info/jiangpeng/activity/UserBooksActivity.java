@@ -6,19 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import info.jiangpeng.BookListFragment;
-import info.jiangpeng.MyBookTabListener;
+import info.jiangpeng.UserBookTabListener;
 import info.jiangpeng.R;
 import info.jiangpeng.ReadingStatus;
-import info.jiangpeng.activity.MainSearchActivity;
 
-public class MyBooksActivity extends ListActivity {
+public class UserBooksActivity extends ListActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.my_book_list);
-
-        ActionBar actionBar = createTabs();
+        setContentView(R.layout.user_book_list);
+        Intent intent = getIntent();
+        String userName = intent.getStringExtra("USER_NAME");
+        if (userName == null){
+            userName = getString(R.string.me);
+        }
+        ActionBar actionBar = createTabs(userName);
 
 
         if (savedInstanceState != null) {
@@ -43,13 +47,13 @@ public class MyBooksActivity extends ListActivity {
         return true;
     }
 
-    private ActionBar createTabs() {
+    private ActionBar createTabs(String userName) {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(R.string.my_books);
+        actionBar.setTitle(userName + "的书单");
 
         actionBar.addTab(createTab(actionBar, R.string.wish, ReadingStatus.WISH));
         actionBar.addTab(createTab(actionBar, R.string.reading, ReadingStatus.READING));
@@ -61,6 +65,6 @@ public class MyBooksActivity extends ListActivity {
         return actionBar.newTab()
                 .setText(tabTextId)
                 .setTag(readingStatus)
-                .setTabListener(new MyBookTabListener(this, ReadingStatus.WISH.toString(), BookListFragment.class));
+                .setTabListener(new UserBookTabListener(this, ReadingStatus.WISH.toString(), BookListFragment.class));
     }
 }

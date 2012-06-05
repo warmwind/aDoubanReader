@@ -37,10 +37,10 @@
                   android:theme="@android:style/Theme.NoTitleBar">
         </activity>
 
-        <activity android:name=".activity.MyBooksActivity"
+        <activity android:name=".activity.UserBooksActivity"
                 android:theme="@android:style/Theme.Holo.Light"/>
 
-        <activity android:name=".activity.MyContactsActivity"
+        <activity android:name=".activity.ContactsActivity"
                 />
 
     </application>
