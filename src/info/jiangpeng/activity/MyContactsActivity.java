@@ -1,10 +1,12 @@
-package info.jiangpeng;
+package info.jiangpeng.activity;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridView;
+import info.jiangpeng.adapter.ContactsAdapter;
+import info.jiangpeng.HeaderScreen;
+import info.jiangpeng.R;
 import info.jiangpeng.helper.UserParser;
 import info.jiangpeng.model.User;
 import info.jiangpeng.sign.CustomOAuthConsumer;
@@ -37,7 +39,6 @@ public class MyContactsActivity extends Activity {
         CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(access_token, access_token_secret);
         try {
             String rawJsonString = consumerSignedIn.executeAfterSignIn("http://api.douban.com/people/" + user_id + "/contacts?alt=json");
-            System.out.println("------------rawJsonString = " + rawJsonString);
             JSONObject jsonObject = new JSONObject(rawJsonString);
             JSONArray entry = jsonObject.getJSONArray("entry");
             int length = entry.length();
@@ -45,7 +46,6 @@ public class MyContactsActivity extends Activity {
                 User user = new UserParser().parse(entry.get(i).toString());
                 contactsAdapter.add(user);
             }
-//            User parse = new UserParser().parse(rawJsonString);
         } catch (Exception e) {
             e.printStackTrace();
         }

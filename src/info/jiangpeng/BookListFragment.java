@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import info.jiangpeng.activity.MainSearchActivity;
+import info.jiangpeng.adapter.BookListAdapter;
 import info.jiangpeng.model.Book;
 import info.jiangpeng.task.SearchMyBookTask;
 import info.jiangpeng.task.SearchTask;

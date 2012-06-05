@@ -1,4 +1,4 @@
-package info.jiangpeng;
+package info.jiangpeng.adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import info.jiangpeng.R;
 import info.jiangpeng.model.Book;
 
 import java.io.IOException;

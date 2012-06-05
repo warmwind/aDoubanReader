@@ -1,10 +1,15 @@
-package info.jiangpeng;
+package info.jiangpeng.activity;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import info.jiangpeng.BookListFragment;
+import info.jiangpeng.MyBookTabListener;
+import info.jiangpeng.R;
+import info.jiangpeng.ReadingStatus;
+import info.jiangpeng.activity.MainSearchActivity;
 
 public class MyBooksActivity extends ListActivity {
     @Override

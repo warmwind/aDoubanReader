@@ -1,4 +1,4 @@
-package info.jiangpeng;
+package info.jiangpeng.activity;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import info.jiangpeng.*;
 import info.jiangpeng.task.SearchTask;
 
 public class MainSearchActivity extends ListActivity {

@@ -1,4 +1,4 @@
-package info.jiangpeng;
+package info.jiangpeng.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import info.jiangpeng.R;
 import info.jiangpeng.model.User;
 
 import java.util.ArrayList;
