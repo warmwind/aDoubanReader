@@ -4,11 +4,9 @@ import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
-import info.jiangpeng.BookListFragment;
-import info.jiangpeng.UserBookTabListener;
-import info.jiangpeng.R;
-import info.jiangpeng.ReadingStatus;
+import info.jiangpeng.*;
 import info.jiangpeng.helper.RequestParams;
 
 public class UserBooksActivity extends ListActivity {
@@ -18,6 +16,7 @@ public class UserBooksActivity extends ListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.user_book_list);
+
         Intent intent = getIntent();
         RequestParams requestParams = (RequestParams)intent.getSerializableExtra("REQUEST_PARAMS");
         String userName = null;
@@ -52,6 +51,38 @@ public class UserBooksActivity extends ListActivity {
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_more).setVisible(false);
+        menu.findItem(R.id.menu_my_books).setVisible(true);
+        menu.findItem(R.id.menu_contacts).setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_my_books:
+                startActivityWithRequestParams(UserBooksActivity.class);
+                return true;
+            case R.id.menu_contacts:
+                startActivityWithRequestParams(ContactsActivity.class);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
     private ActionBar createTabs(String userName) {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -65,6 +96,7 @@ public class UserBooksActivity extends ListActivity {
         actionBar.addTab(createTab(actionBar, R.string.wish, ReadingStatus.WISH));
         actionBar.addTab(createTab(actionBar, R.string.reading, ReadingStatus.READING));
         actionBar.addTab(createTab(actionBar, R.string.read, ReadingStatus.READ));
+
         return actionBar;
     }
 
@@ -74,4 +106,11 @@ public class UserBooksActivity extends ListActivity {
                 .setTag(readingStatus)
                 .setTabListener(new UserBookTabListener(this, ReadingStatus.WISH.toString(), BookListFragment.class));
     }
+
+    private void startActivityWithRequestParams(Class activityClass) {
+        Intent intent = getIntent();
+        intent.setClass(this, activityClass);
+        startActivity(intent);
+    }
+
 }

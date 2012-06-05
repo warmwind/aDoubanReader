@@ -3,6 +3,8 @@ package info.jiangpeng.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -64,6 +66,45 @@ public class ContactsActivity extends Activity {
         }
         initComponent();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_more).setVisible(false);
+        menu.findItem(R.id.menu_my_books).setVisible(headerScreen.isUserSignedIn());
+        menu.findItem(R.id.menu_contacts).setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_my_books:
+                startActivityWithRequestParams(UserBooksActivity.class);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void startActivityWithRequestParams(Class activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        RequestParams params = new RequestParams();
+        params.setUserId(headerScreen.getUserId());
+        params.setAccessToken(headerScreen.accessToken);
+        params.setAccessTokenSecret(headerScreen.accessTokenSecret);
+        intent.putExtra("REQUEST_PARAMS", params);
+        startActivity(intent);
+    }
+
 
     private void initComponent() {
         headerScreen.initComponent(this);
