@@ -6,12 +6,12 @@ import info.jiangpeng.helper.BookParser;
 import info.jiangpeng.model.Book;
 import org.json.JSONObject;
 
-public class BookParserTask extends AsyncTask<JSONObject, Integer, Book> {
+public class BookParseTask extends AsyncTask<JSONObject, Integer, Book> {
 
     private BookListFragment bookListFragment;
     private BookParser bookParser;
 
-    public BookParserTask(BookListFragment bookListFragment, BookParser bookParser) {
+    public BookParseTask(BookListFragment bookListFragment, BookParser bookParser) {
 
         this.bookListFragment = bookListFragment;
         this.bookParser = bookParser;

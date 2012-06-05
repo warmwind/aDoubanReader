@@ -19,7 +19,9 @@ public class UserParser {
         String userName = jsonObject.getJSONObject("title").getString("$t");
         user.setName(userName);
 
-        String userId = jsonObject.getJSONObject("db:uid").getString("$t");
+
+        String uri = jsonObject.getJSONObject("uri").getString("$t");
+        String userId = uri.substring(uri.lastIndexOf("/") + 1, uri.length());
         user.setId(userId);
 
         String signature = jsonObject.getJSONObject("db:signature").getString("$t");

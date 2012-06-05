@@ -53,7 +53,7 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
 
             int bookListSize = entryArray.length();
             for (int i = 0; i < bookListSize; i++) {
-                new BookParserTask(bookListFragment, new CommonBookParser()).execute(entryArray.getJSONObject(i));
+                new BookParseTask(bookListFragment, new CommonBookParser()).execute(entryArray.getJSONObject(i));
             }
         } catch (JSONException e) {
             e.printStackTrace();

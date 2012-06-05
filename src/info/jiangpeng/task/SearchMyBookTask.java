@@ -48,7 +48,7 @@ public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
             JSONArray entry = jsonObject.getJSONArray("entry");
             int length = entry.length();
             for (int i = 0; i < length; i++) {
-                new BookParserTask(bookListFragment, new MyBookParser()).execute(entry.getJSONObject(i));
+                new BookParseTask(bookListFragment, new MyBookParser()).execute(entry.getJSONObject(i));
             }
         } catch (Exception e) {
             e.printStackTrace();
