@@ -17,6 +17,16 @@ public class CommonBookParser extends AbstractBookParser implements BookParser{
         book.setAverageRate(jsonBookObject.getJSONObject("gd:rating").getString("@average"));
         parseMetadataJson(jsonBookObject, book);
 
+
+        try {
+            JSONObject summary = jsonBookObject.getJSONObject("summary");
+            if(summary != null){
+                book.setSummary(summary.getString("$t"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return book;
 
     }

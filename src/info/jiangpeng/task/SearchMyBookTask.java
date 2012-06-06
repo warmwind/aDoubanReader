@@ -42,7 +42,6 @@ public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String s) {
-
         try {
             JSONObject jsonObject = new JSONObject(s);
             JSONArray entry = jsonObject.getJSONArray("entry");

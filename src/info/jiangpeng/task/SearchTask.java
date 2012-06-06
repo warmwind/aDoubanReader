@@ -34,13 +34,13 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
         parseBookList(s);
     }
 
-    private String searchBookList(String query) throws Exception {
+    private String searchBookList(String keyWord) throws Exception {
         Uri uri = new Uri.Builder().scheme("http").authority("api.douban.com").path("book/subjects").
                 appendQueryParameter("alt", "json").
                 appendQueryParameter("apikey", "0d5f0a33b677be10281d1e9b23673a30").
                 appendQueryParameter("max-results", "20").
                 appendQueryParameter("start-index", String.valueOf(bookListFragment.getBookCount())).
-                appendQueryParameter("q", query).build();
+                appendQueryParameter("q", keyWord).build();
 
         HttpGet request = new HttpGet(uri.toString());
 
@@ -49,6 +49,7 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
 
     private void parseBookList(String rawString) {
         try {
+            System.out.println("------------rawString = " + rawString);
             JSONArray entryArray = new JSONObject(rawString).getJSONArray("entry");
 
             int bookListSize = entryArray.length();

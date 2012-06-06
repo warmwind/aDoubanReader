@@ -42,6 +42,8 @@
 
         <activity android:name=".activity.ContactsActivity"
                 />
+        <activity android:name=".activity.BookDetailsActivity"
+                />
 
     </application>
 </manifest>

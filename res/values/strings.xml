@@ -11,5 +11,7 @@
     <string name="reading">在读</string>
     <string name="read">已读</string>
     <string name="contacts">关注</string>
+    <string name="author_intro">作者简介</string>
+    <string name="summary">内容简介</string>
 
 </resources>

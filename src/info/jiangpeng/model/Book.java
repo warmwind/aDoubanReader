@@ -1,16 +1,26 @@
 package info.jiangpeng.model;
 
 import android.graphics.drawable.BitmapDrawable;
+import info.jiangpeng.BookImageDrawable;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable{
     private String title;
     private String author;
     private String averageRate;
     private String bookUrlInWeb;
-    private BitmapDrawable imageDrawable;
+    private BookImageDrawable imageDrawable;
     private String publisher;
     private String pubDate;
     private String status;
+    private String bookDetailsUrl;
+    private String summary;
+    private String authorIntro;
+    private String imageUrl;
+
+    public Book() {
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -44,11 +54,11 @@ public class Book {
         return bookUrlInWeb;
     }
 
-    public void setImageDrawable(BitmapDrawable imageDrawable) {
+    public void setImageDrawable(BookImageDrawable imageDrawable) {
         this.imageDrawable = imageDrawable;
     }
 
-    public BitmapDrawable getImageDrawable() {
+    public BookImageDrawable getImageDrawable() {
         return imageDrawable;
     }
 
@@ -78,5 +88,37 @@ public class Book {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setBookDetailsUrl(String bookDetailsUrl) {
+        this.bookDetailsUrl = bookDetailsUrl;
+    }
+
+    public String getBookDetailsUrl() {
+        return bookDetailsUrl;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setAuthorIntro(String authorIntro) {
+        this.authorIntro = authorIntro;
+    }
+
+    public String getAuthorIntro() {
+        return authorIntro;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
