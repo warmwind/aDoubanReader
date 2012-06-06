@@ -91,7 +91,7 @@ public class UserBooksActivity extends ListActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(userName + "的书单");
 
-        actionBar.setIcon(R.drawable.douban);
+//        actionBar.setIcon(R.drawable.douban);
 
         actionBar.addTab(createTab(actionBar, R.string.wish, ReadingStatus.WISH));
         actionBar.addTab(createTab(actionBar, R.string.reading, ReadingStatus.READING));

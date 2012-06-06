@@ -1,7 +1,9 @@
 package info.jiangpeng;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -37,6 +39,7 @@ public class HeaderScreen extends RelativeLayout{
     public static final String CALLBACK_URL = "vtbapp-doudou:///";
     private TextView signInText;
     private Activity activity;
+    private AlertDialog alertDialog;
 
 
     public HeaderScreen(Context context, AttributeSet attrs) {
@@ -50,11 +53,14 @@ public class HeaderScreen extends RelativeLayout{
         vi.inflate(R.layout.header, frameLayout, true);
 
         this.addView(frameLayout);
+
     }
 
 
-    public void initComponent(Activity activity) {
+    public void initComponent(final Activity activity) {
         this.activity = activity;
+        alertDialog = initAlertDialog(activity);
+
         signInText = (TextView) findViewById(R.id.user);
         signInText.setText(user.getName());
 
@@ -64,8 +70,7 @@ public class HeaderScreen extends RelativeLayout{
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
                         if (user.isSignedIn()) {
-                            user = new NullUser();
-                            signInText.setText(user.getName());
+                            alertDialog.show();
                         } else {
                             try {
                                 retrieveRequestToken();
@@ -81,6 +86,25 @@ public class HeaderScreen extends RelativeLayout{
         });
 
     }
+
+    private AlertDialog initAlertDialog(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        user = new NullUser();
+                        signInText.setText(user.getName());
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        return builder.create();
+    }
+
     public boolean isUserSignedIn(){
         return user.isSignedIn();
     }
