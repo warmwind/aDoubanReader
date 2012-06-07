@@ -43,15 +43,15 @@ public class BookListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        try {
             Book book = getBook(position);
-            HttpGet request = new HttpGet(book.getBookDetailsUrl() + "?alt=json&apikey=0d5f0a33b677be10281d1e9b23673a30");
-            String rawJson = EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
-            new SearchDetailsTask(getActivity()).execute(book);
-//            new CommonBookParser().parse(new JSONObject(rawJson));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Intent intent = new Intent(getActivity(), BookDetailsActivity.class);
+            intent.putExtra("BOOK_DETAILS_URL", book.getBookDetailsUrl());
+            getActivity().startActivity(intent);
+
+//            HttpGet request = new HttpGet(book.getBookDetailsUrl() + "?alt=json&apikey=0d5f0a33b677be10281d1e9b23673a30");
+//            String rawJson = EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
+//            new SearchDetailsTask(getActivity()).execute(book);
+////            new CommonBookParser().parse(new JSONObject(rawJson));
 
 //        new SearchDetailsTask(getActivity()).execute(book);
     }
