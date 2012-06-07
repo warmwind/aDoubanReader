@@ -1,22 +1,27 @@
 package info.jiangpeng.activity;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
+import info.jiangpeng.HeaderScreen;
 import info.jiangpeng.R;
+import info.jiangpeng.adapter.BookAdapter;
+import info.jiangpeng.adapter.BookDetailAdapter;
 import info.jiangpeng.task.SearchDetailsTask;
 
-public class BookDetailsActivity extends Activity {
+public class BookDetailsActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.book_details);
+        setContentView(R.layout.book_details_container);
 
-        //If remove it, scroll in details screen will be very slow
-        findViewById(R.id.book_detail_image).setDrawingCacheEnabled(true);
-
+        HeaderScreen headerScreen = (HeaderScreen) findViewById(R.id.header);
+        headerScreen.initComponent(this);
+        BookAdapter bookAdapter = new BookDetailAdapter(this, R.layout.book_detail, R.id.book_author);
+        this.setListAdapter(bookAdapter);
         String detailsUrl = getIntent().getStringExtra("BOOK_DETAILS_URL");
-        new SearchDetailsTask(this).execute(detailsUrl);
+        new SearchDetailsTask(bookAdapter).execute(detailsUrl);
     }
+
 }

@@ -16,42 +16,9 @@ import info.jiangpeng.model.Book;
 import java.io.IOException;
 import java.net.URL;
 
-public class BookListAdapter extends ArrayAdapter<Book> {
-
-    private int resource;
+public class BookListAdapter extends BookAdapter {
 
     public BookListAdapter(Context context, int resource, int textViewResourceId) {
         super(context, resource, textViewResourceId);
-        this.resource = resource;
     }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        super.getView(position, convertView, parent);
-
-        LinearLayout bookLayout;
-        if (convertView == null) {
-            bookLayout = new LinearLayout(getContext());
-            String inflater = Context.LAYOUT_INFLATER_SERVICE;
-            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(inflater);
-            vi.inflate(resource, bookLayout, true);
-        } else {
-            bookLayout = (LinearLayout) convertView;
-        }
-
-        fillContentToView(getItem(position), bookLayout);
-
-        return bookLayout;
-    }
-
-    private void fillContentToView(Book item, LinearLayout bookLayout) {
-        ((ImageView) bookLayout.findViewById(R.id.book_image)).setImageDrawable(item.getImageDrawable());
-        ((TextView) bookLayout.findViewById(R.id.book_title)).setText(item.getTitle());
-        ((TextView) bookLayout.findViewById(R.id.book_author)).setText(item.getAuthor());
-        ((TextView) bookLayout.findViewById(R.id.book_rate)).setText(item.getAverageRate());
-        ((TextView) bookLayout.findViewById(R.id.book_publisher)).setText(item.getPublisher());
-        ((TextView) bookLayout.findViewById(R.id.book_pubdate)).setText(item.getPubDate());
-        ((TextView) bookLayout.findViewById(R.id.book_status)).setText(item.getStatus());
-    }
-
 }

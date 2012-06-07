@@ -10,19 +10,11 @@ import android.widget.ListView;
 import info.jiangpeng.activity.BookDetailsActivity;
 import info.jiangpeng.activity.MainSearchActivity;
 import info.jiangpeng.adapter.BookListAdapter;
-import info.jiangpeng.helper.CommonBookParser;
-import info.jiangpeng.model.Book;
 import info.jiangpeng.helper.RequestParams;
-import info.jiangpeng.task.SearchDetailsTask;
+import info.jiangpeng.model.Book;
 import info.jiangpeng.task.SearchMyBookTask;
 import info.jiangpeng.task.SearchTask;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class BookListFragment extends ListFragment {
@@ -47,13 +39,6 @@ public class BookListFragment extends ListFragment {
             Intent intent = new Intent(getActivity(), BookDetailsActivity.class);
             intent.putExtra("BOOK_DETAILS_URL", book.getBookDetailsUrl());
             getActivity().startActivity(intent);
-
-//            HttpGet request = new HttpGet(book.getBookDetailsUrl() + "?alt=json&apikey=0d5f0a33b677be10281d1e9b23673a30");
-//            String rawJson = EntityUtils.toString(new DefaultHttpClient().execute(request).getEntity());
-//            new SearchDetailsTask(getActivity()).execute(book);
-////            new CommonBookParser().parse(new JSONObject(rawJson));
-
-//        new SearchDetailsTask(getActivity()).execute(book);
     }
 
     @Override
