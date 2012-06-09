@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,7 +28,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class HeaderScreen extends RelativeLayout{
+public class HeaderScreen extends RelativeLayout {
 
     public static String accessToken;
     public static String accessTokenSecret;
@@ -105,44 +106,84 @@ public class HeaderScreen extends RelativeLayout{
         return builder.create();
     }
 
-    public boolean isUserSignedIn(){
+    public boolean isUserSignedIn() {
         return user.isSignedIn();
     }
 
-    public String getUserId(){
+    public String getUserId() {
         return user.getId();
     }
 
     public void updateUserInfo() throws OAuthExpectationFailedException, OAuthMessageSignerException, OAuthCommunicationException, OAuthNotAuthorizedException, IOException, JSONException {
-        User user = retrieveUserInfo();
-        HeaderScreen.user = user;
-        signInText.setText(HeaderScreen.user.getName());
+        if(isUserSignedIn()){
+            return;
+        }
+        new UpdateUserIntoTask().execute();
 
     }
 
     private void retrieveRequestToken() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
-        DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-        String url = OAuthFactory.createProvider().retrieveRequestToken(consumer, CALLBACK_URL);
-
-        requestToken = consumer.getToken();
-        requestTokenSecret = consumer.getTokenSecret();
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        activity.startActivity(browserIntent);
+        new RetrieveRequestTokenTask().execute();
     }
 
-    private User retrieveUserInfo() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException, JSONException, IOException {
-        DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
-        retrieveAccessToken(consumer);
 
-        CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(consumer.getToken(), consumer.getTokenSecret());
-        return new UserParser().parse(consumerSignedIn.executeAfterSignIn(USER_INFO_URL));
+
+    private class RetrieveRequestTokenTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+            try {
+                String url = OAuthFactory.createProvider().retrieveRequestToken(consumer, CALLBACK_URL);
+                requestToken = consumer.getToken();
+                requestTokenSecret = consumer.getTokenSecret();
+                return url;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String url) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            activity.startActivity(browserIntent);
+        }
     }
 
-    private void retrieveAccessToken(DefaultOAuthConsumer consumer) throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
-        consumer.setTokenWithSecret(requestToken, requestTokenSecret);
-        OAuthFactory.createProvider().retrieveAccessToken(consumer, null);
-        accessToken = consumer.getToken();
-        accessTokenSecret = consumer.getTokenSecret();
-    }
+    private class UpdateUserIntoTask extends AsyncTask<String, Integer, User>{
 
+        @Override
+        protected User doInBackground(String... strings) {
+            User user = new NullUser();
+            try {
+                user = retrieveUserInfo();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return user;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            HeaderScreen.user = user;
+            signInText.setText(HeaderScreen.user.getName());
+        }
+
+        private User retrieveUserInfo() throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException, JSONException, IOException {
+            DefaultOAuthConsumer consumer = OAuthFactory.createConsumer();
+            retrieveAccessToken(consumer);
+
+            CustomOAuthConsumer consumerSignedIn = OAuthFactory.createConsumer(consumer.getToken(), consumer.getTokenSecret());
+            return new UserParser().parse(consumerSignedIn.executeAfterSignIn(USER_INFO_URL));
+        }
+
+        private void retrieveAccessToken(DefaultOAuthConsumer consumer) throws OAuthMessageSignerException, OAuthNotAuthorizedException, OAuthExpectationFailedException, OAuthCommunicationException {
+            consumer.setTokenWithSecret(requestToken, requestTokenSecret);
+            OAuthFactory.createProvider().retrieveAccessToken(consumer, null);
+            accessToken = consumer.getToken();
+            accessTokenSecret = consumer.getTokenSecret();
+        }
+    }
 }

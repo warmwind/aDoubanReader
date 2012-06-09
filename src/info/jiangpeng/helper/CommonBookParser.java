@@ -24,7 +24,7 @@ public class CommonBookParser extends AbstractBookParser implements BookParser{
                 book.setSummary(summary.getString("$t"));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            System.out.println("eat this exception because in list screen, there is no summary info");
         }
 
         return book;
