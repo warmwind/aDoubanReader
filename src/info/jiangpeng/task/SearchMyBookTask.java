@@ -32,6 +32,7 @@ public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
 
         try {
             String requestUrl = consumer.sign(new UrlStringRequestAdapter("http://api.douban.com/people/" + userId + "/collection?cat=book&alt=json&status="+ status)).getRequestUrl();
+            System.out.println("------------requestUrl = " + requestUrl);
             return EntityUtils.toString(new DefaultHttpClient().execute(new HttpGet(requestUrl)).getEntity());
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +44,7 @@ public class SearchMyBookTask extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String s) {
         try {
+            System.out.println("------------s = " + s);
             JSONObject jsonObject = new JSONObject(s);
             JSONArray entry = jsonObject.getJSONArray("entry");
             int length = entry.length();

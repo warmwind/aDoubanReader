@@ -5,26 +5,22 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import info.jiangpeng.R;
 import info.jiangpeng.model.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContactsAdapter extends BaseAdapter {
 
+    private ArrayList<User> userList;
     private Activity activity;
-    private List<User> userList;
 
     public ContactsAdapter(Activity activity) {
-
-        this.activity = activity;
         userList = new ArrayList<User>();
+        this.activity = activity;
     }
+
 
     @Override
     public int getCount() {
@@ -43,15 +39,15 @@ public class ContactsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        LinearLayout layout;
+        System.out.println("------------position = " + position);
+        RelativeLayout layout;
         if (convertView == null) {
-            layout = new LinearLayout(activity);
+            layout = new RelativeLayout(activity);
             String inflater = Context.LAYOUT_INFLATER_SERVICE;
             LayoutInflater vi = (LayoutInflater) activity.getSystemService(inflater);
             vi.inflate(R.layout.contact_item, layout, true);
         } else {
-            layout = (LinearLayout) convertView;
+            layout = (RelativeLayout) convertView;
         }
 
         fillContentToView(getItem(position), layout);
@@ -59,7 +55,7 @@ public class ContactsAdapter extends BaseAdapter {
         return layout;
     }
 
-    private void fillContentToView(User user, LinearLayout layout) {
+    private void fillContentToView(User user, RelativeLayout layout) {
         ((ImageView) layout.findViewById(R.id.contact_image)).setImageDrawable(user.getImageDrawable());
         ((TextView) layout.findViewById(R.id.contact_name)).setText(user.getName());
         ((TextView) layout.findViewById(R.id.contact_signature)).setText(user.getSignature());

@@ -31,6 +31,7 @@ public class BookParseTask extends AsyncTask<JSONObject, Integer, Book> {
     protected void onPostExecute(final Book book) {
         if (!book.isEmpty()) {
             bookListFragment.add(book);
+            System.out.println("------------book = " + book);
         }
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <EditText android:id="@+id/search_text" android:layout_height="fill_parent" android:layout_width="fill_parent"
+                  android:hint="@string/search_hint"/>
+        <ImageView android:src="@android:drawable/ic_menu_search" android:layout_height="40dp"
+                   android:layout_width="40dp"
+                   android:layout_gravity="right"
+                   android:paddingRight="10dp"
+                   android:id="@+id/search_icon"/>
+        <ProgressBar android:id="@+id/search_progress_bar"
+                     android:layout_width="fill_parent"
+                     android:layout_height="41dp"
+                     style="@android:style/Widget.ProgressBar.Horizontal"
+                     android:visibility="gone"
+                     android:max="1000"
+                />
+    </FrameLayout>
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:src="@color/list_item_divider"/>
+
+    <fragment
+            class="info.jiangpeng.BookListFragment"
+            android:id="@+id/main_book_list"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+
+            />
+</LinearLayout>

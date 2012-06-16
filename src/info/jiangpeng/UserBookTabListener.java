@@ -8,13 +8,12 @@ import android.app.FragmentTransaction;
 public class UserBookTabListener<T extends Fragment> implements ActionBar.TabListener {
 
     private final Activity activity;
-    private final Class<T> clazz;
-    private Fragment fragment;
+    private BookListFragment bookListFragment;
 
-    public UserBookTabListener(Activity activity, String tag, Class clazz) {
+    public UserBookTabListener(Activity activity, String tag, BookListFragment bookListFragment) {
         this.activity = activity;
+        this.bookListFragment = bookListFragment;
 
-        this.clazz = clazz;
 
         //if remove this method call, when device orientation change, it will attach again.
         detachFragmentIfAttached(activity, tag);
@@ -22,36 +21,39 @@ public class UserBookTabListener<T extends Fragment> implements ActionBar.TabLis
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        System.out.println("-------selected");
-        if (fragment == null) {
-            fragment = Fragment.instantiate(activity, clazz.getName());
-            fragmentTransaction.add(android.R.id.content, fragment, tab.getTag().toString());
-        } else {
-            fragmentTransaction.attach(fragment);
+        if (bookListFragment != null) {
+            fragmentTransaction.attach(bookListFragment);
+            bookListFragment.executeSearchByReadingStatus();
+            System.out.println("------------attach "+ tab.getTag().toString() + " to fragment");
+        }
+        else{
+            System.out.println("------------Add " + tab.getTag().toString() + " to fragment");
+            bookListFragment = (BookListFragment) Fragment.instantiate(activity, BookListFragment.class.getName());
+            bookListFragment.executeSearchByReadingStatus();
+            fragmentTransaction.add(android.R.id.content, bookListFragment, tab.getTag().toString());
         }
 
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        if (fragment != null) {
-            System.out.println("----------unselect");
-            fragmentTransaction.detach(fragment);
+        if (bookListFragment != null) {
+            fragmentTransaction.detach(bookListFragment);
         }
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        if (fragment != null) {
-            fragmentTransaction.attach(fragment);
+        if (bookListFragment != null) {
+            fragmentTransaction.attach(bookListFragment);
         }
     }
 
     private void detachFragmentIfAttached(Activity activity, String tag) {
-        fragment = activity.getFragmentManager().findFragmentByTag(tag);
-        if (fragment != null && !fragment.isDetached()) {
+        bookListFragment = (BookListFragment) activity.getFragmentManager().findFragmentByTag(tag);
+        if (bookListFragment != null && !bookListFragment.isDetached()) {
             FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-            ft.detach(fragment);
+            ft.detach(bookListFragment);
             ft.commit();
         }
     }

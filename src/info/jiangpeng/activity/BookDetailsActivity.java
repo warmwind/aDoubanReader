@@ -2,7 +2,6 @@ package info.jiangpeng.activity;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import info.jiangpeng.HeaderScreen;
 import info.jiangpeng.R;
 import info.jiangpeng.adapter.BookAdapter;
 import info.jiangpeng.adapter.BookDetailAdapter;
@@ -16,8 +15,6 @@ public class BookDetailsActivity extends ListActivity {
 
         setContentView(R.layout.book_details_container);
 
-        HeaderScreen headerScreen = (HeaderScreen) findViewById(R.id.header);
-        headerScreen.initComponent(this);
         BookAdapter bookAdapter = new BookDetailAdapter(this, R.layout.book_detail, R.id.book_author);
         this.setListAdapter(bookAdapter);
         String detailsUrl = getIntent().getStringExtra("BOOK_DETAILS_URL");

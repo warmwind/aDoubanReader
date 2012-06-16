@@ -10,26 +10,6 @@ public class RequestParams implements Serializable {
     private String accessToken;
     private String accessTokenSecret;
 
-    public RequestParams() {
-    }
-
-    public RequestParams(Intent intent) {
-        Serializable requestParams = intent.getSerializableExtra("REQUEST_PARAMS");
-        if (requestParams != null) {
-            RequestParams params = (RequestParams) requestParams;
-            userName = params.getUserName();
-            userId = params.getUserId();
-            accessToken = params.getAccessToken();
-            accessTokenSecret = params.getAccessTokenSecret();
-        } else {
-            userName = intent.getStringExtra("USER_NAME");
-            userId = intent.getStringExtra("USER_ID");
-            accessToken = intent.getStringExtra("ACCESS_TOKEN");
-            accessTokenSecret = intent.getStringExtra("ACCESS_TOKEN_SECRET");
-        }
-    }
-
-
     public String getUserName() {
         return userName;
     }

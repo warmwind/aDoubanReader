@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import info.jiangpeng.activity.BookDetailsActivity;
-import info.jiangpeng.activity.MainSearchActivity;
 import info.jiangpeng.adapter.BookListAdapter;
 import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.model.Book;
@@ -21,6 +20,9 @@ public class BookListFragment extends ListFragment {
     private BookListAdapter bookArrayAdapter;
     private ArrayList<DataChangeListener> listeners;
 
+    //TODO: remove static
+    private static RequestParams requestParams;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,16 +31,16 @@ public class BookListFragment extends ListFragment {
         bookArrayAdapter = new BookListAdapter(getActivity(), R.layout.book_item, R.id.book_title);
         setListAdapter(bookArrayAdapter);
 
-        executeSearchByReadingStatus();
+
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-            Book book = getBook(position);
-            Intent intent = new Intent(getActivity(), BookDetailsActivity.class);
-            intent.putExtra("BOOK_DETAILS_URL", book.getBookDetailsUrl());
-            getActivity().startActivity(intent);
+        Book book = getBook(position);
+        Intent intent = new Intent(getActivity(), BookDetailsActivity.class);
+        intent.putExtra("BOOK_DETAILS_URL", book.getBookDetailsUrl());
+        getActivity().startActivity(intent);
     }
 
     @Override
@@ -47,27 +49,27 @@ public class BookListFragment extends ListFragment {
         return inflater.inflate(R.layout.list, container, false);
     }
 
-    public void initComponent(MainSearchActivity mainSearchActivity) {
-        bookArrayAdapter = new BookListAdapter(mainSearchActivity, R.layout.book_item, R.id.book_title);
-        ListView listView = mainSearchActivity.getListView();
-        listView.setAdapter(bookArrayAdapter);
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("--------bookListFragment resumed and search again");
+        executeSearchByReadingStatus();
     }
-
 
     public void addDataChangeListener(DataChangeListener listener) {
         listeners.add(listener);
     }
 
 
-    private void executeSearchByReadingStatus() {
-        Intent intent = getActivity().getIntent();
-        if (intent != null) {
-            RequestParams params = new RequestParams(intent);
-            String tag = getTag();
-            if (tag != null) {
-                searchMyOwn(params, tag.toLowerCase());
-            }
+    public void executeSearchByReadingStatus() {
+        String tag = getTag();
+        System.out.println("------------search tag = " + tag);
+        System.out.println("------------requestParams = " + requestParams);
+        if (tag != null & requestParams != null) {
+            getActivity().getActionBar().setTitle(requestParams.getUserName() + "的书单");
+            searchMyOwn(requestParams, tag.toLowerCase());
         }
+
     }
 
     public void executeSearchByKeyWord(String query) {
@@ -89,9 +91,12 @@ public class BookListFragment extends ListFragment {
     }
 
 
-    private void searchMyOwn(RequestParams params, String tag) {
+    public void searchMyOwn(RequestParams params, String tag) {
+//        if (bookArrayAdapter.getCount() == 0) {
         bookArrayAdapter.clear();
-        new SearchMyBookTask(this).execute(params.getUserId(), params.getAccessToken(), params.getAccessTokenSecret(), tag);
+            System.out.println("------------params.getUserName() = " + params.getUserName());
+            new SearchMyBookTask(this).execute(this.requestParams.getUserId(), params.getAccessToken(), params.getAccessTokenSecret(), tag.toLowerCase());
+//        }
     }
 
     private void notifyListingViewAndProgressBar() {
@@ -99,5 +104,11 @@ public class BookListFragment extends ListFragment {
         for (DataChangeListener listener : listeners) {
             listener.update();
         }
+    }
+
+
+    public void setRequestParams(RequestParams requestParams) {
+        System.out.println("------------setting requestParams = " + requestParams);
+        this.requestParams = requestParams;
     }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:id="@+id/main_container">
+
+    <fragment android:name="info.jiangpeng.SearchScreenFragment"
+              android:layout_width="fill_parent" android:layout_height="wrap_content"
+              android:id="@+id/search_fragment"/>
+
+    <fragment android:name="info.jiangpeng.activity.UserBooksFragment"
+              android:layout_width="fill_parent" android:layout_height="wrap_content"
+              android:id="@+id/my_books_fragment"/>
+    <fragment android:name="info.jiangpeng.activity.ContactsFragment"
+              android:layout_width="fill_parent" android:layout_height="wrap_content"
+              android:id="@+id/contacts_fragment"/>
+
+
+</LinearLayout>

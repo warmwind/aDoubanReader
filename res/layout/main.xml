@@ -3,12 +3,6 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <info.jiangpeng.HeaderScreen
-            android:id="@+id/header"
-            android:layout_height="40dp"
-            android:layout_width="fill_parent"
-            />
-
     <info.jiangpeng.SearchBar android:id="@+id/search_bar"
                               android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
@@ -18,13 +12,6 @@
             android:layout_height="2dp"
             android:src="@color/list_item_divider"/>
 
-    <fragment
-            class="info.jiangpeng.BookListFragment"
-            android:id="@+id/main_book_list"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-
-    />
 
 </LinearLayout>
 

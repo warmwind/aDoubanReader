@@ -32,6 +32,7 @@ public class UserParseTask extends AsyncTask<String, Integer, User> {
 
     @Override
     protected void onPostExecute(User user) {
+        System.out.println("------------user = " + user);
         adapter.add(user);
     }
 }
