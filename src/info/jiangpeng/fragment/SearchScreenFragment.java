@@ -1,4 +1,4 @@
-package info.jiangpeng;
+package info.jiangpeng.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import info.jiangpeng.R;
+import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.task.SearchTask;
 
 public class SearchScreenFragment extends Fragment {

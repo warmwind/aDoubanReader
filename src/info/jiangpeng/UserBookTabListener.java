@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import info.jiangpeng.fragment.BookListFragment;
 
 public class UserBookTabListener<T extends Fragment> implements ActionBar.TabListener {
 
@@ -24,7 +25,7 @@ public class UserBookTabListener<T extends Fragment> implements ActionBar.TabLis
         if (bookListFragment != null) {
             fragmentTransaction.attach(bookListFragment);
             bookListFragment.executeSearchByReadingStatus();
-            System.out.println("------------attach "+ tab.getTag().toString() + " to fragment");
+            System.out.println("------------attach " + tab.getTag().toString() + " to fragment");
         }
         else{
             System.out.println("------------Add " + tab.getTag().toString() + " to fragment");

@@ -1,8 +1,6 @@
-package info.jiangpeng.activity;
+package info.jiangpeng.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import info.jiangpeng.BookListFragment;
 import info.jiangpeng.R;
+import info.jiangpeng.activity.MainActivity;
 import info.jiangpeng.adapter.ContactsAdapter;
 import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.sign.CustomOAuthConsumer;

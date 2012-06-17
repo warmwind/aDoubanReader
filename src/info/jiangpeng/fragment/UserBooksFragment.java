@@ -1,4 +1,4 @@
-package info.jiangpeng.activity;
+package info.jiangpeng.fragment;
 
 import android.app.ActionBar;
 import android.app.ListFragment;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import info.jiangpeng.BookListFragment;
 import info.jiangpeng.R;
 import info.jiangpeng.ReadingStatus;
 import info.jiangpeng.UserBookTabListener;

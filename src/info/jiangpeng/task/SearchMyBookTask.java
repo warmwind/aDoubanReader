@@ -1,7 +1,7 @@
 package info.jiangpeng.task;
 
 import android.os.AsyncTask;
-import info.jiangpeng.BookListFragment;
+import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.helper.UserBookParser;
 import info.jiangpeng.sign.OAuthFactory;
 import oauth.signpost.basic.DefaultOAuthConsumer;

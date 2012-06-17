@@ -6,14 +6,14 @@
               android:orientation="vertical"
               android:id="@+id/main_container">
 
-    <fragment android:name="info.jiangpeng.SearchScreenFragment"
+    <fragment android:name="info.jiangpeng.fragment.SearchScreenFragment"
               android:layout_width="fill_parent" android:layout_height="wrap_content"
               android:id="@+id/search_fragment"/>
 
-    <fragment android:name="info.jiangpeng.activity.UserBooksFragment"
+    <fragment android:name="info.jiangpeng.fragment.UserBooksFragment"
               android:layout_width="fill_parent" android:layout_height="wrap_content"
               android:id="@+id/my_books_fragment"/>
-    <fragment android:name="info.jiangpeng.activity.ContactsFragment"
+    <fragment android:name="info.jiangpeng.fragment.ContactsFragment"
               android:layout_width="fill_parent" android:layout_height="wrap_content"
               android:id="@+id/contacts_fragment"/>
 

@@ -1,7 +1,7 @@
 package info.jiangpeng.task;
 
 import android.os.AsyncTask;
-import info.jiangpeng.BookListFragment;
+import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.helper.BookParser;
 import info.jiangpeng.model.Book;
 import org.json.JSONObject;

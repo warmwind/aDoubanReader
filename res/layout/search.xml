@@ -26,7 +26,7 @@
             android:src="@color/list_item_divider"/>
 
     <fragment
-            class="info.jiangpeng.BookListFragment"
+            class="info.jiangpeng.fragment.BookListFragment"
             android:id="@+id/main_book_list"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"

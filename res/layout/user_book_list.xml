@@ -4,7 +4,7 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
     <fragment
-            class="info.jiangpeng.BookListFragment"
+            class="info.jiangpeng.fragment.BookListFragment"
             android:id="@+id/my_book_list"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"

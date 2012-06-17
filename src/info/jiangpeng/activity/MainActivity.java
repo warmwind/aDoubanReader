@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import info.jiangpeng.R;
+import info.jiangpeng.fragment.ContactsFragment;
+import info.jiangpeng.fragment.UserBooksFragment;
 import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.helper.UserParser;
 import info.jiangpeng.model.NullUser;

@@ -2,7 +2,7 @@ package info.jiangpeng.task;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import info.jiangpeng.BookListFragment;
+import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.helper.CommonBookParser;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;

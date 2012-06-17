@@ -1,4 +1,4 @@
-package info.jiangpeng;
+package info.jiangpeng.fragment;
 
 import android.app.ListFragment;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import info.jiangpeng.DataChangeListener;
+import info.jiangpeng.R;
 import info.jiangpeng.activity.BookDetailsActivity;
 import info.jiangpeng.adapter.BookListAdapter;
 import info.jiangpeng.helper.RequestParams;
