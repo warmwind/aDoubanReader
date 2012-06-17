@@ -1,7 +1,5 @@
 package info.jiangpeng.helper;
 
-import android.content.Intent;
-
 import java.io.Serializable;
 
 public class RequestParams implements Serializable {
@@ -9,6 +7,7 @@ public class RequestParams implements Serializable {
     private String userId;
     private String accessToken;
     private String accessTokenSecret;
+    private boolean isUserChanged;
 
     public String getUserName() {
         return userName;
@@ -40,5 +39,13 @@ public class RequestParams implements Serializable {
 
     public void setAccessTokenSecret(String accessTokenSecret) {
         this.accessTokenSecret = accessTokenSecret;
+    }
+
+    public void setUserChanged(boolean userChanged) {
+        this.isUserChanged = userChanged;
+    }
+
+    public boolean isUserChanged() {
+        return isUserChanged;
     }
 }

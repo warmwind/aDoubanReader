@@ -52,12 +52,13 @@ public class ContactsFragment extends Fragment {
                 requestParams.setUserName(contactsAdapter.getItem(position).getName());
                 requestParams.setAccessToken(requestParams.getAccessToken());
                 requestParams.setAccessTokenSecret(requestParams.getAccessTokenSecret());
+                requestParams.setUserChanged(true);
                 contactView.setVisibility(View.GONE);
 //                userBooksFragment = (UserBooksFragment) Fragment.instantiate(getActivity(), UserBooksFragment.class.getName());
                 MainActivity activity = (MainActivity) getActivity();
                 System.out.println("------------requestParams.getUserId() = " + requestParams.getUserId());
                 System.out.println("------------requestParams.getUserName() = " + requestParams.getUserName());
-                activity.userBooksFragment.setRequestParams(requestParams);
+                activity.setRequestParams(requestParams);
                 activity.showMyBooksTab();
 
             }

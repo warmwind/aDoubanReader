@@ -24,13 +24,15 @@ public class UserBookTabListener<T extends Fragment> implements ActionBar.TabLis
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         if (bookListFragment != null) {
             fragmentTransaction.attach(bookListFragment);
-            bookListFragment.executeSearchByReadingStatus();
+
+//            bookListFragment.executeSearchByReadingStatus();
+
             System.out.println("------------attach " + tab.getTag().toString() + " to fragment");
         }
         else{
             System.out.println("------------Add " + tab.getTag().toString() + " to fragment");
             bookListFragment = (BookListFragment) Fragment.instantiate(activity, BookListFragment.class.getName());
-            bookListFragment.executeSearchByReadingStatus();
+//            bookListFragment.executeSearchByReadingStatus();
             fragmentTransaction.add(android.R.id.content, bookListFragment, tab.getTag().toString());
         }
 

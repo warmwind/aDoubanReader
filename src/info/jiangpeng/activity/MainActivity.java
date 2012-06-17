@@ -39,11 +39,12 @@ public class MainActivity extends Activity {
     public static final String CALLBACK_URL = "vtbapp-doudou:///";
 
 
-    public UserBooksFragment userBooksFragment;
+    private UserBooksFragment userBooksFragment;
     private Fragment searchFragment;
     private FragmentTransaction ft;
     private ContactsFragment contactsFragment;
     private User user = new NullUser();
+    private RequestParams requestParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,10 @@ public class MainActivity extends Activity {
         new UpdateUserIntoTask().execute();
     }
 
+    public void setRequestParams(RequestParams requestParams) {
+        userBooksFragment.setRequestParams(requestParams);
+    }
+
 
     private class UpdateUserIntoTask extends AsyncTask<String, Integer, User> {
 
@@ -101,7 +106,7 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(User user) {
-            RequestParams requestParams = new RequestParams();
+            requestParams = new RequestParams();
             requestParams.setUserId(user.getId());
             requestParams.setUserName(user.getName());
             requestParams.setAccessToken(accessToken);
@@ -155,13 +160,14 @@ public class MainActivity extends Activity {
             case R.id.menu_my_books:
                 try {
                     if (user.isSignedIn()) {
-                        showMyBooksTab();
                         RequestParams requestParams = new RequestParams();
                         requestParams.setAccessToken(accessToken);
                         requestParams.setAccessTokenSecret(accessTokenSecret);
                         requestParams.setUserId(user.getId());
                         requestParams.setUserName(user.getName());
+                        requestParams.setUserChanged(true);
                         userBooksFragment.setRequestParams(requestParams);
+                        showMyBooksTab();
                     } else {
                         retrieveRequestToken();
                     }

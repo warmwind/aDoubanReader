@@ -1,8 +1,8 @@
 package info.jiangpeng;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import info.jiangpeng.activity.MainActivity;
 import info.jiangpeng.fragment.BookListFragment;
-import info.jiangpeng.fragment.SearchScreenFragment;
 import info.jiangpeng.task.SearchTask;
 
 public class SearchBar extends FrameLayout implements DataChangeListener {
@@ -22,9 +21,13 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
     private Activity activity;
     private EditText searchArea;
     private BookListFragment bookListFragment;
+    private ImageView spinnerImageView;
+    private AnimationDrawable spinnerAnimation;
+    private Context context;
 
     public SearchBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         initUI();
     }
 
@@ -46,10 +49,12 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
             }
         });
         progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
+
     }
 
     @Override
     public void update() {
+        progressBar.setVisibility(View.VISIBLE);
         currentStatus += PROGRESS_BAR_MAX / 10;
         progressBar.setProgress(currentStatus);
 
@@ -71,10 +76,11 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
     }
 
     private void executeSearch() {
+        bookListFragment.resetResultList();
         String keyWord = searchArea.getText().toString();
         if (!keyWord.trim().equals("")) {
             showProgressBar();
-            new SearchTask(bookListFragment, progressBar).execute(keyWord);
+            new SearchTask(bookListFragment, this).execute(keyWord);
             searchArea.clearFocus();
             hideKeyBoard();
         }
@@ -82,6 +88,10 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
 
     private void hideKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(((MainActivity)getContext()).getCurrentFocus().getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(((MainActivity) getContext()).getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 }

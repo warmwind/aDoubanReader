@@ -14,7 +14,6 @@ import info.jiangpeng.adapter.BookListAdapter;
 import info.jiangpeng.helper.RequestParams;
 import info.jiangpeng.model.Book;
 import info.jiangpeng.task.SearchMyBookTask;
-import info.jiangpeng.task.SearchTask;
 
 import java.util.ArrayList;
 
@@ -32,8 +31,6 @@ public class BookListFragment extends ListFragment {
         listeners = new ArrayList<DataChangeListener>();
         bookArrayAdapter = new BookListAdapter(getActivity(), R.layout.book_item, R.id.book_title);
         setListAdapter(bookArrayAdapter);
-
-
     }
 
     @Override
@@ -56,6 +53,9 @@ public class BookListFragment extends ListFragment {
         super.onResume();
         System.out.println("--------bookListFragment resumed and search again");
         executeSearchByReadingStatus();
+        if (requestParams != null) {
+            requestParams.setUserChanged(false);
+        }
     }
 
     public void addDataChangeListener(DataChangeListener listener) {
@@ -67,9 +67,12 @@ public class BookListFragment extends ListFragment {
         String tag = getTag();
         System.out.println("------------search tag = " + tag);
         System.out.println("------------requestParams = " + requestParams);
-        if (tag != null & requestParams != null) {
+        if (requestParams != null) {
+            System.out.println("------------requestParams.isUserChanged = " + requestParams.isUserChanged());
+        }
+        if (tag != null && requestParams != null) {
             getActivity().getActionBar().setTitle(requestParams.getUserName() + "的书单");
-            searchMyOwn(requestParams, tag.toLowerCase());
+            searchUserBooks(requestParams, tag.toLowerCase());
         }
 
     }
@@ -88,11 +91,11 @@ public class BookListFragment extends ListFragment {
     }
 
 
-    public void searchMyOwn(RequestParams params, String tag) {
+    public void searchUserBooks(RequestParams params, String tag) {
 //        if (bookArrayAdapter.getCount() == 0) {
         bookArrayAdapter.clear();
-            System.out.println("------------params.getUserName() = " + params.getUserName());
-            new SearchMyBookTask(this).execute(this.requestParams.getUserId(), params.getAccessToken(), params.getAccessTokenSecret(), tag.toLowerCase());
+        System.out.println("------------params.getUserName() = " + params.getUserName());
+        new SearchMyBookTask(this).execute(this.requestParams.getUserId(), params.getAccessToken(), params.getAccessTokenSecret(), tag.toLowerCase());
 //        }
     }
 
@@ -103,9 +106,14 @@ public class BookListFragment extends ListFragment {
         }
     }
 
+    public void resetResultList() {
+        bookArrayAdapter.clear();
+    }
+
 
     public void setRequestParams(RequestParams requestParams) {
         System.out.println("------------setting requestParams = " + requestParams);
         this.requestParams = requestParams;
     }
+
 }

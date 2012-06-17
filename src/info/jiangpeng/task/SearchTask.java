@@ -2,8 +2,9 @@ package info.jiangpeng.task;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.View;
-import android.widget.ProgressBar;
+import info.jiangpeng.SearchBar;
 import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.helper.CommonBookParser;
 import org.apache.http.client.methods.HttpGet;
@@ -16,17 +17,16 @@ import org.json.JSONObject;
 public class SearchTask extends AsyncTask<String, Integer, String> {
 
     private BookListFragment bookListFragment;
-    private ProgressBar progressBar;
+    private SearchBar searchBar;
 
-    public SearchTask(BookListFragment bookListFragment, ProgressBar progressBar) {
+    public SearchTask(BookListFragment bookListFragment, SearchBar searchBar) {
         this.bookListFragment = bookListFragment;
-        this.progressBar = progressBar;
+        this.searchBar = searchBar;
     }
 
     @Override
     protected String doInBackground(String... strings) {
         try {
-            progressBar.setProgress(500);
             return searchBookList(strings[0]);
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,8 +36,6 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        progressBar.setProgress(1000);
-        hideProgressBar();
         parseBookList(s);
 
     }
@@ -59,19 +57,14 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
         try {
             System.out.println("------------rawString = " + rawString);
             JSONArray entryArray = new JSONObject(rawString).getJSONArray("entry");
-            progressBar.setVisibility(View.VISIBLE);
+            searchBar.showProgressBar();
             int bookListSize = entryArray.length();
             for (int i = 0; i < bookListSize; i++) {
                 new BookParseTask(bookListFragment, new CommonBookParser()).execute(entryArray.getJSONObject(i));
             }
         } catch (JSONException e) {
-            hideProgressBar();
+            searchBar.hideProgressBar();
             e.printStackTrace();
         }
     }
-
-    private void hideProgressBar() {
-        progressBar.setVisibility(View.GONE);
-    }
-
 }

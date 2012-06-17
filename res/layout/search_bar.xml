@@ -8,12 +8,14 @@
               android:hint="@string/search_hint"
               android:imeOptions="actionSearch"
               android:singleLine="true"
+              android:paddingLeft="40dp"
             />
     <ImageView android:src="@android:drawable/ic_menu_search" android:layout_height="40dp"
                android:layout_width="40dp"
-               android:layout_gravity="right"
-               android:paddingRight="10dp"
+               android:layout_gravity="left"
+               android:paddingLeft="10dp"
                android:id="@+id/search_icon"/>
+
     <ProgressBar android:id="@+id/search_progress_bar"
                  android:layout_width="fill_parent"
                  android:layout_height="41dp"
@@ -21,4 +23,5 @@
                  android:visibility="gone"
                  android:max="1000"
             />
+
 </FrameLayout>
