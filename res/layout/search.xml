@@ -4,22 +4,9 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical">
-    <FrameLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
-        <EditText android:id="@+id/search_text" android:layout_height="fill_parent" android:layout_width="fill_parent"
-                  android:hint="@string/search_hint"/>
-        <ImageView android:src="@android:drawable/ic_menu_search" android:layout_height="40dp"
-                   android:layout_width="40dp"
-                   android:layout_gravity="right"
-                   android:paddingRight="10dp"
-                   android:id="@+id/search_icon"/>
-        <ProgressBar android:id="@+id/search_progress_bar"
-                     android:layout_width="fill_parent"
-                     android:layout_height="41dp"
-                     style="@android:style/Widget.ProgressBar.Horizontal"
-                     android:visibility="gone"
-                     android:max="1000"
-                />
-    </FrameLayout>
+    <info.jiangpeng.SearchBar android:layout_width="fill_parent"
+                              android:layout_height="wrap_content"
+            android:id="@+id/search_bar"/>
     <ImageView
             android:layout_width="fill_parent"
             android:layout_height="2dp"

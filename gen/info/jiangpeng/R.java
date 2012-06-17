@@ -46,21 +46,20 @@ public final class R {
         public static final int contact_name=0x7f08000c;
         public static final int contact_signature=0x7f08000d;
         public static final int contact_view=0x7f08000e;
-        public static final int contacts_fragment=0x7f080015;
-        public static final int main_book_list=0x7f080019;
-        public static final int main_container=0x7f080012;
-        public static final int menu_contacts=0x7f08001f;
-        public static final int menu_more=0x7f08001c;
-        public static final int menu_my_books=0x7f08001e;
-        public static final int menu_search=0x7f08001d;
-        public static final int my_book_list=0x7f08001b;
-        public static final int my_books_fragment=0x7f080014;
-        public static final int search=0x7f08001a;
-        public static final int search_bar=0x7f080011;
-        public static final int search_fragment=0x7f080013;
-        public static final int search_icon=0x7f080017;
-        public static final int search_progress_bar=0x7f080018;
-        public static final int search_text=0x7f080016;
+        public static final int contacts_fragment=0x7f080014;
+        public static final int main_book_list=0x7f080016;
+        public static final int main_container=0x7f080011;
+        public static final int menu_contacts=0x7f08001e;
+        public static final int menu_more=0x7f08001b;
+        public static final int menu_my_books=0x7f08001d;
+        public static final int menu_search=0x7f08001c;
+        public static final int my_book_list=0x7f08001a;
+        public static final int my_books_fragment=0x7f080013;
+        public static final int search_bar=0x7f080015;
+        public static final int search_fragment=0x7f080012;
+        public static final int search_icon=0x7f080018;
+        public static final int search_progress_bar=0x7f080019;
+        public static final int search_text=0x7f080017;
         public static final int summary_txt=0x7f080009;
         public static final int user=0x7f080010;
     }
@@ -72,11 +71,10 @@ public final class R {
         public static final int contacts_fragment=0x7f030004;
         public static final int header=0x7f030005;
         public static final int list=0x7f030006;
-        public static final int main=0x7f030007;
-        public static final int main_layout=0x7f030008;
-        public static final int search=0x7f030009;
-        public static final int search_bar=0x7f03000a;
-        public static final int user_book_list=0x7f03000b;
+        public static final int main_layout=0x7f030007;
+        public static final int search=0x7f030008;
+        public static final int search_bar=0x7f030009;
+        public static final int user_book_list=0x7f03000a;
     }
     public static final class menu {
         public static final int menu=0x7f070000;

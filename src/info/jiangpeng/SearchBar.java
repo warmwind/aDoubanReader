@@ -4,20 +4,24 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import info.jiangpeng.activity.MainActivity;
+import info.jiangpeng.fragment.BookListFragment;
+import info.jiangpeng.fragment.SearchScreenFragment;
+import info.jiangpeng.task.SearchTask;
 
 public class SearchBar extends FrameLayout implements DataChangeListener {
     private ProgressBar progressBar;
     private int currentStatus;
     public static final int PROGRESS_BAR_MAX = 1000;
     private Activity activity;
-
-    public SearchBar(Context context) {
-        super(context);
-        initUI();
-    }
+    private EditText searchArea;
+    private BookListFragment bookListFragment;
 
     public SearchBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,7 +34,17 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
         vi.inflate(R.layout.search_bar, frameLayout, true);
 
         this.addView(frameLayout);
-
+        searchArea = (EditText) findViewById(R.id.search_text);
+        searchArea.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    executeSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
         progressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
     }
 
@@ -46,21 +60,28 @@ public class SearchBar extends FrameLayout implements DataChangeListener {
         }
 
     }
+
     public void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    public void initComponent(Activity activity) {
-        this.activity = activity;
-        initSearchBar();
+    public void initComponent(BookListFragment bookListFragment) {
+        this.bookListFragment = bookListFragment;
+        bookListFragment.addDataChangeListener(this);
     }
 
-    private void initSearchBar() {
-        SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = (SearchView) findViewById(R.id.search);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
+    private void executeSearch() {
+        String keyWord = searchArea.getText().toString();
+        if (!keyWord.trim().equals("")) {
+            showProgressBar();
+            new SearchTask(bookListFragment, progressBar).execute(keyWord);
+            searchArea.clearFocus();
+            hideKeyBoard();
+        }
     }
 
-
+    private void hideKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(((MainActivity)getContext()).getCurrentFocus().getWindowToken(), 0);
+    }
 }

@@ -3,44 +3,34 @@ package info.jiangpeng.fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import info.jiangpeng.R;
+import info.jiangpeng.SearchBar;
 import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.task.SearchTask;
 
 public class SearchScreenFragment extends Fragment {
 
+    private BookListFragment bookListFragment;
+    private SearchBar searchBar;
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final EditText searchText = (EditText) getView().findViewById(R.id.search_text);
+        bookListFragment = (BookListFragment) getFragmentManager().findFragmentById(R.id.main_book_list);
+        searchBar = (SearchBar) getView().findViewById(R.id.search_bar);
+        searchBar.initComponent(bookListFragment);
 
-        final BookListFragment bookListFragment = (BookListFragment) getFragmentManager().findFragmentById(R.id.main_book_list);
-
-        final ImageView searchImage = (ImageView) getView().findViewById(R.id.search_icon);
-        searchImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String keyWord = searchText.getText().toString();
-                if (!keyWord.trim().equals("")) {
-                    new SearchTask(bookListFragment).execute(keyWord);
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-                }
-            }
-        });
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.search, container, false);
     }
-
-
 }

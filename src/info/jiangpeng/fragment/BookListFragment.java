@@ -74,11 +74,6 @@ public class BookListFragment extends ListFragment {
 
     }
 
-    public void executeSearchByKeyWord(String query) {
-        new SearchTask(this).execute(query);
-    }
-
-
     public int getBookCount() {
         return bookArrayAdapter.getCount();
     }

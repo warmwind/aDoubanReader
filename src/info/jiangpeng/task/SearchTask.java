@@ -2,6 +2,8 @@ package info.jiangpeng.task;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 import info.jiangpeng.fragment.BookListFragment;
 import info.jiangpeng.helper.CommonBookParser;
 import org.apache.http.client.methods.HttpGet;
@@ -14,14 +16,17 @@ import org.json.JSONObject;
 public class SearchTask extends AsyncTask<String, Integer, String> {
 
     private BookListFragment bookListFragment;
+    private ProgressBar progressBar;
 
-    public SearchTask(BookListFragment bookListFragment) {
+    public SearchTask(BookListFragment bookListFragment, ProgressBar progressBar) {
         this.bookListFragment = bookListFragment;
+        this.progressBar = progressBar;
     }
 
     @Override
     protected String doInBackground(String... strings) {
         try {
+            progressBar.setProgress(500);
             return searchBookList(strings[0]);
         } catch (Exception e) {
             e.printStackTrace();
@@ -31,7 +36,10 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String s) {
+        progressBar.setProgress(1000);
+        hideProgressBar();
         parseBookList(s);
+
     }
 
     private String searchBookList(String keyWord) throws Exception {
@@ -51,14 +59,19 @@ public class SearchTask extends AsyncTask<String, Integer, String> {
         try {
             System.out.println("------------rawString = " + rawString);
             JSONArray entryArray = new JSONObject(rawString).getJSONArray("entry");
-
+            progressBar.setVisibility(View.VISIBLE);
             int bookListSize = entryArray.length();
             for (int i = 0; i < bookListSize; i++) {
                 new BookParseTask(bookListFragment, new CommonBookParser()).execute(entryArray.getJSONObject(i));
             }
         } catch (JSONException e) {
+            hideProgressBar();
             e.printStackTrace();
         }
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 
 }
