@@ -19,5 +19,4 @@ public class BookDetailAdapter extends BookAdapter{
         ((TextView) bookLayout.findViewById(R.id.book_summary)).setText(book.getSummary());
 
     }
-
 }

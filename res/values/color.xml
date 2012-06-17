@@ -4,4 +4,5 @@
     <color name="toast_bg">#757575</color>
     <color name="toast_text">#FFF</color>
     <color name="list_item_divider">#77A04E</color>
+    <color name="bg_detail_item_title">#B7EDA4</color>
 </resources>

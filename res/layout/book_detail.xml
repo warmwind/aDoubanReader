@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+        >
 
     <ImageView android:id="@+id/book_image"
                android:layout_width="100dp"
                android:layout_height="100dp"
-               android:layout_alignParentLeft="true"/>
+               android:layout_alignParentLeft="true"
+               android:layout_marginTop="5dp"/>
     <TextView android:id="@+id/book_title"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_toRightOf="@id/book_image"
-              android:textColor="@color/book_item_color"/>
+              android:textColor="@color/book_item_color"
+              android:layout_marginTop="5dp"/>
     <TextView android:id="@+id/book_author"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -50,20 +52,30 @@
               android:text="@string/author_intro"
               android:layout_below="@id/book_status"
               android:id="@+id/author_info_txt"
+              android:layout_marginTop="5dp"
+              android:background="@color/bg_detail_item_title"
             />
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:id="@+id/book_author_intro"
-              android:layout_below="@id/author_info_txt"/>
+              android:layout_below="@id/author_info_txt"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+            />
 
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:text="@string/summary"
               android:layout_below="@id/book_author_intro"
+              android:layout_marginTop="5dp"
+              android:background="@color/bg_detail_item_title"
               android:id="@+id/summary_txt"/>
     <TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:id="@+id/book_summary"
-              android:layout_below="@id/summary_txt"/>
+              android:layout_below="@id/summary_txt"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+            />
 
 </RelativeLayout>

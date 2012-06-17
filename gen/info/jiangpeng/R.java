@@ -11,6 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int bg_detail_item_title=0x7f050005;
         public static final int book_item_color=0x7f050001;
         public static final int list_item_divider=0x7f050004;
         public static final int search_bar_bg=0x7f050000;
